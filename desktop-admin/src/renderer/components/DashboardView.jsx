@@ -20,42 +20,8 @@ import {
   ExternalLink 
 } from 'lucide-react';
 
-// Initial sample data if no Supabase items yet
-const INITIAL_DEMO_PRODUCTS = [
-  {
-    id: 'demo-1',
-    name_ar: 'طقم أقراص فرامل سيراميك بريمبو عالي الأداء',
-    name_en: 'Brembo High-Performance Ceramic Brake Discs Kit',
-    image_url: 'https://images.unsplash.com/photo-1600705722908-bab1e61c0b4d?auto=format&fit=crop&w=800&q=80',
-    category: 'Brakes',
-    part_number: 'BRM-9942-X',
-    price: 249.99,
-    in_stock: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'demo-2',
-    name_ar: 'شاحن توربيني مزدوج Garrett GT3582R معدل',
-    name_en: 'Garrett GT3582R Twin-Scroll Performance Turbocharger',
-    image_url: 'https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=800&q=80',
-    category: 'Engine',
-    part_number: 'GRT-3582-R',
-    price: 899.50,
-    in_stock: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'demo-3',
-    name_ar: 'طقم شمعات إشعال إيريديوم بوش بلاتينيوم (4 قطع)',
-    name_en: 'Bosch Platinum Iridium Spark Plugs Set of 4',
-    image_url: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=80',
-    category: 'Electrical',
-    part_number: 'BSH-7491-IR',
-    price: 48.00,
-    in_stock: true,
-    created_at: new Date().toISOString()
-  }
-];
+// Initial products list is completely empty - ready for user data
+const INITIAL_DEMO_PRODUCTS = [];
 
 export const DashboardView = () => {
   const { t, language, isRTL } = useLanguage();

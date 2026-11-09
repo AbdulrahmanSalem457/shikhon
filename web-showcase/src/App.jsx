@@ -7,20 +7,14 @@ import { Footer } from './components/Footer';
 import { supabase, isSupabaseConfigured, FALLBACK_PRODUCTS } from './lib/supabase';
 
 const MainContent = () => {
-  const [products, setProducts] = useState(FALLBACK_PRODUCTS);
-  const [loading, setLoading] = useState(isSupabaseConfigured);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const { isRTL } = useLanguage();
 
   // Load products from Supabase
   const loadProducts = async () => {
-    if (!isSupabaseConfigured || !supabase) {
-      setProducts(FALLBACK_PRODUCTS);
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       const { data, error: sbError } = await supabase
@@ -29,19 +23,14 @@ const MainContent = () => {
         .order('created_at', { ascending: false });
 
       if (sbError) {
-        console.warn('Supabase fetch error, using fallback:', sbError.message);
-        setProducts(FALLBACK_PRODUCTS);
+        console.warn('Supabase fetch error:', sbError.message);
         setError(sbError.message);
-      } else if (data && data.length > 0) {
-        setProducts(data);
-        setError(null);
       } else {
-        // If table is empty, show initial seeds
-        setProducts(FALLBACK_PRODUCTS);
+        setProducts(data || []);
+        setError(null);
       }
     } catch (err) {
       console.warn('Network or Supabase error:', err);
-      setProducts(FALLBACK_PRODUCTS);
     } finally {
       setLoading(false);
     }
