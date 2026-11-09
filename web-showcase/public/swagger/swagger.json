@@ -1,0 +1,396 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Shikhon (شيخون) Auto Spare Parts API",
+    "description": "REST API for Shikhon (شيخون) car spare parts catalog. Authenticate with Supabase Auth (obtain JWT access token from `/auth/v1/token?grant_type=password`) and click 'Authorize' using `apikey` and `Bearer <token>`.",
+    "version": "v1",
+    "contact": {
+      "name": "Shikhon Platform Engineering",
+      "email": "support@shikhon.com"
+    },
+    "license": {
+      "name": "MIT License"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://ugmtruurtlyieptuzhar.supabase.co",
+      "description": "Live Supabase Cloud (shikhon)"
+    },
+    {
+      "url": "http://127.0.0.1:54321",
+      "description": "Local Supabase CLI Instance"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/v1/token?grant_type=password": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Log in (obtain JWT access token)",
+        "operationId": "auth_login_post",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginRequest"
+              },
+              "example": {
+                "email": "admin@shikhon-parts.com",
+                "password": "YourAdminPassword2026!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JWT access token returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthLoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid login credentials"
+          }
+        }
+      }
+    },
+    "/auth/v1/user": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Get current admin user profile",
+        "operationId": "auth_user_read",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current user profile data"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rest/v1/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Fetch all car spare parts (Public)",
+        "operationId": "products_list",
+        "parameters": [
+          {
+            "name": "select",
+            "in": "query",
+            "description": "Columns to select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "*"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Ordering clause",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "created_at.desc"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Row limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of spare parts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Products"],
+        "summary": "Create new spare part (Admin Only)",
+        "operationId": "products_create",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Prefer",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "return=representation"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              },
+              "example": {
+                "name_ar": "طقم أقراص فرامل سيراميك بريمبو",
+                "name_en": "Brembo Ceramic Brake Discs Kit",
+                "image_url": "https://ugmtruurtlyieptuzhar.supabase.co/storage/v1/object/public/product-images/parts/brembo.jpg",
+                "category": "Brakes",
+                "part_number": "BRM-9942-X",
+                "price": 249.99,
+                "in_stock": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rest/v1/products?id=eq.{id}": {
+      "patch": {
+        "tags": ["Products"],
+        "summary": "Update spare part details by ID (Admin Only)",
+        "operationId": "products_partial_update",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+          },
+          {
+            "name": "Prefer",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "return=representation"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductRequest"
+              },
+              "example": {
+                "name_ar": "طقم أقراص فرامل سيراميك بريمبو - إصدار معدل",
+                "price": 279.00
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "summary": "Delete spare part by ID (Admin Only)",
+        "operationId": "products_delete",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/storage/v1/object/public/product-images/{wildcard}": {
+      "get": {
+        "tags": ["Storage"],
+        "summary": "View / Download public spare part image",
+        "operationId": "storage_get_public_image",
+        "parameters": [
+          {
+            "name": "wildcard",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "parts/brembo.jpg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image binary"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "apikey",
+        "description": "Supabase Public Anon Key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Supabase User JWT Access Token"
+      }
+    },
+    "schemas": {
+      "AuthLoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "admin@shikhon-parts.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "YourPassword123!"
+          }
+        }
+      },
+      "AuthLoginResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" },
+          "token_type": { "type": "string", "example": "bearer" },
+          "expires_in": { "type": "integer", "example": 3600 },
+          "user": { "type": "object" }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "required": ["id", "name_ar", "name_en", "image_url", "created_at"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name_ar": { "type": "string" },
+          "name_en": { "type": "string" },
+          "image_url": { "type": "string", "format": "uri" },
+          "category": { "type": "string" },
+          "part_number": { "type": "string" },
+          "price": { "type": "number" },
+          "in_stock": { "type": "boolean" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CreateProductRequest": {
+        "type": "object",
+        "required": ["name_ar", "name_en", "image_url"],
+        "properties": {
+          "name_ar": { "type": "string" },
+          "name_en": { "type": "string" },
+          "image_url": { "type": "string", "format": "uri" },
+          "category": { "type": "string" },
+          "part_number": { "type": "string" },
+          "price": { "type": "number" },
+          "in_stock": { "type": "boolean" }
+        }
+      },
+      "UpdateProductRequest": {
+        "type": "object",
+        "properties": {
+          "name_ar": { "type": "string" },
+          "name_en": { "type": "string" },
+          "image_url": { "type": "string", "format": "uri" },
+          "category": { "type": "string" },
+          "part_number": { "type": "string" },
+          "price": { "type": "number" },
+          "in_stock": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

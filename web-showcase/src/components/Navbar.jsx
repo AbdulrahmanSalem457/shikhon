@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Globe, Wrench, ShieldCheck, Sparkles, ExternalLink } from 'lucide-react';
+import { Globe, Wrench, ShieldCheck, Sparkles, ExternalLink, Code2 } from 'lucide-react';
 
 export const Navbar = () => {
   const { language, toggleLanguage, t, isRTL } = useLanguage();
@@ -107,6 +107,18 @@ export const Navbar = () => {
               </div>
               <Globe className="w-3.5 h-3.5 mx-1.5 text-slate-400 group-hover:text-cyan-400 transition-colors" />
             </button>
+
+            {/* Swagger API Explorer Link */}
+            <a
+              href="./swagger/"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-all duration-200"
+              title="Open Swagger API Explorer"
+            >
+              <Code2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Swagger API</span>
+            </a>
 
             {/* Admin Dashboard Entry Link */}
             <a
