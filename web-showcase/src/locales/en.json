@@ -1,0 +1,68 @@
+{
+  "brand": {
+    "name": "Shikhon",
+    "fullName": "Shikhon | شيخون",
+    "subtitle": "Premium Auto Spare Parts Showcase"
+  },
+  "nav": {
+    "catalog": "Catalog & Inventory",
+    "categories": "Categories",
+    "about": "About Shikhon",
+    "contact": "Contact Us",
+    "adminPortal": "Admin Portal"
+  },
+  "hero": {
+    "badge": "✨ Next-Gen Shikhon Spare Parts Platform 2026",
+    "titlePrefix": "The Ultimate Destination for",
+    "titleHighlight": "Genuine Car Spare Parts",
+    "description": "Explore an extensive inventory of certified high-grade automotive components. Instant cloud catalog with bilingual search powered by our Apple visionOS-inspired Liquid Glass interface.",
+    "searchPlaceholder": "Search by part name (Arabic or English) or OEM part number...",
+    "stat1Label": "Certified Parts",
+    "stat1Value": "5,000+",
+    "stat2Label": "OEM Guaranteed",
+    "stat2Value": "100%",
+    "stat3Label": "Rapid Dispatch",
+    "stat3Value": "24/7"
+  },
+  "catalog": {
+    "title": "Available Spare Parts Catalog",
+    "subtitle": "Browse our latest real-time warehouse inventory with instant inspection and direct ordering",
+    "allCategories": "All Categories",
+    "noProductsFound": "No spare parts matched your search query",
+    "tryDifferentSearch": "Try different keywords or switch category filter",
+    "resultsCount": "Showing {{count}} spare parts",
+    "detailsButton": "Inspect Details",
+    "whatsappInquire": "Order via WhatsApp",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "partNumber": "Part #"
+  },
+  "categories": {
+    "All": "All",
+    "Brakes": "Braking Systems",
+    "Engine": "Engine & Turbos",
+    "Suspension": "Suspension & Shocks",
+    "Electrical": "Electrical & Alternators",
+    "Lighting": "Lighting & Headlamps",
+    "Cooling": "Cooling & Radiators",
+    "General": "General Parts"
+  },
+  "modal": {
+    "title": "Spare Part Details",
+    "category": "Category",
+    "partNumber": "OEM Part Number",
+    "status": "Availability",
+    "price": "Estimated Price",
+    "orderViaWhatsapp": "Instant WhatsApp Order",
+    "callStore": "Call Sales Representative",
+    "copyPartNumber": "Copy Part Number",
+    "copied": "Copied to clipboard!",
+    "close": "Close"
+  },
+  "footer": {
+    "description": "Shikhon Platform - The premier automotive parts showcase featuring Apple visionOS Liquid Glass aesthetic and Supabase serverless cloud.",
+    "quickLinks": "Quick Links",
+    "rights": "All rights reserved to Shikhon Platform © 2026",
+    "poweredBy": "Engineered with React & Supabase Serverless"
+  }
+}

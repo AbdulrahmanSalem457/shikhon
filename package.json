@@ -1,0 +1,28 @@
+{
+  "name": "shikhon-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shikhon (شيخون) - Bilingual Car Spare Parts Showcase Platform with Apple visionOS Liquid Glass aesthetic",
+  "scripts": {
+    "dev:web": "npm run dev --prefix web-showcase",
+    "dev:admin": "npm run dev --prefix desktop-admin",
+    "dev:electron": "npm run electron --prefix desktop-admin",
+    "dev:swagger": "npx serve swagger-ui -p 8080",
+    "build:web": "npm run build --prefix web-showcase",
+    "build:admin": "npm run build --prefix desktop-admin",
+    "build:all": "npm run build:web && npm run build:admin"
+  },
+  "keywords": [
+    "shikhon",
+    "car-spare-parts",
+    "liquid-glass",
+    "visionos",
+    "supabase",
+    "bilingual",
+    "arabic-english",
+    "electron",
+    "react"
+  ],
+  "author": "Shikhon Engineering",
+  "license": "MIT"
+}

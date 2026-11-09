@@ -1,0 +1,504 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Shikhon (شيخون) - Car Spare Parts Supabase REST API",
+    "description": "Complete interactive OpenAPI 3.0 documentation for the Shikhon (شيخون) bilingual car spare parts platform. Test PostgREST, Supabase Auth, and Storage endpoints directly using JSON payloads.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Shikhon Platform Engineering",
+      "url": "https://github.com/shikhon"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{project_ref}.supabase.co",
+      "description": "Live Supabase Cloud Project",
+      "variables": {
+        "project_ref": {
+          "default": "your-project-ref",
+          "description": "Your 20-character Supabase Project Reference ID"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:54321",
+      "description": "Local Supabase CLI Instance"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/v1/token?grant_type=password": {
+      "post": {
+        "tags": ["1. Authentication (Admin Login)"],
+        "summary": "Admin Login via Supabase Auth (Password Grant)",
+        "description": "Authenticates the admin using email and password, returning an access_token (JWT) to use in authenticated REST & Storage operations.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "JSON payload containing admin credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginRequest"
+              },
+              "example": {
+                "email": "admin@shikhon-parts.com",
+                "password": "StrongAdminPassword2026!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Authentication - Returns JWT access token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthLoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials or missing grant type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/v1/products": {
+      "get": {
+        "tags": ["2. Products (PostgREST Catalog)"],
+        "summary": "Fetch Products Catalog (Public Access)",
+        "description": "Retrieves products from the PostgreSQL `products` table. Allowed for anonymous visitors (`anon` role) and authenticated users.",
+        "parameters": [
+          {
+            "name": "select",
+            "in": "query",
+            "description": "Columns to select (e.g. * or id,name_ar,name_en,image_url)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "*"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Ordering criteria (e.g. created_at.desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "created_at.desc"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of rows to return",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of car spare parts matching query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1",
+                    "name_ar": "طقم أقراص فرامل سيراميك بريمبو عالي الأداء",
+                    "name_en": "Brembo High-Performance Ceramic Brake Discs Kit",
+                    "image_url": "https://your-project-ref.supabase.co/storage/v1/object/public/product-images/parts/brembo.jpg",
+                    "category": "Brakes",
+                    "part_number": "BRM-9942-X",
+                    "price": 249.99,
+                    "in_stock": true,
+                    "created_at": "2026-11-09T12:00:00Z"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["2. Products (PostgREST Catalog)"],
+        "summary": "Create a New Spare Part (Admin Only)",
+        "description": "Inserts a new car spare part into the `products` table. Requires `Authorization: Bearer <access_token>` from an authenticated user.",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Prefer",
+            "in": "header",
+            "description": "Instruct PostgREST to return the created record representation",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "return=representation"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "JSON payload of the spare part",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              },
+              "example": {
+                "name_ar": "شاحن توربيني مزدوج Garrett GT3582R معدل",
+                "name_en": "Garrett GT3582R Twin-Scroll Performance Turbocharger",
+                "image_url": "https://your-project-ref.supabase.co/storage/v1/object/public/product-images/parts/garrett.jpg",
+                "category": "Engine",
+                "part_number": "GRT-3582-R",
+                "price": 899.50,
+                "in_stock": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid Bearer token"
+          },
+          "403": {
+            "description": "Forbidden - Row-Level Security violation"
+          }
+        }
+      }
+    },
+    "/rest/v1/products?id=eq.{id}": {
+      "patch": {
+        "tags": ["2. Products (PostgREST Catalog)"],
+        "summary": "Update Product Details by ID (Admin Only)",
+        "description": "Updates fields of an existing spare part via JSON. Requires Bearer token authentication.",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "UUID of the product to update",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+          },
+          {
+            "name": "Prefer",
+            "in": "header",
+            "description": "Return representation of updated record",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "return=representation"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductRequest"
+              },
+              "example": {
+                "name_ar": "طقم أقراص فرامل سيراميك بريمبو - إصدار معدل 2026",
+                "name_en": "Brembo High-Performance Ceramic Brake Discs Kit (2026 Edition)",
+                "price": 279.00
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["2. Products (PostgREST Catalog)"],
+        "summary": "Delete Product by ID (Admin Only)",
+        "description": "Deletes a spare part by its UUID. Requires Bearer token authentication.",
+        "security": [
+          {
+            "ApiKeyAuth": [],
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "UUID of the product to delete",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product successfully deleted (No Content)"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/storage/v1/object/public/product-images/{wildcard}": {
+      "get": {
+        "tags": ["3. Supabase Storage (product-images)"],
+        "summary": "Get Public Image File",
+        "description": "Direct public access to images uploaded to the `product-images` bucket. Anyone can access without credentials.",
+        "parameters": [
+          {
+            "name": "wildcard",
+            "in": "path",
+            "required": true,
+            "description": "Path of the image in the bucket (e.g. parts/brembo.jpg)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "parts/1731150000-brembo.jpg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image binary data",
+            "content": {
+              "image/jpeg": {},
+              "image/png": {},
+              "image/webp": {}
+            }
+          },
+          "404": {
+            "description": "Object not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "apikey",
+        "description": "Supabase Public Anon Key (Required for all requests)"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Supabase User JWT Access Token (Required for Admin Write actions)"
+      }
+    },
+    "schemas": {
+      "AuthLoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "admin@shikhon-parts.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "SuperSecretPassword123!"
+          }
+        }
+      },
+      "AuthLoginResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "JWT bearer token for authenticated requests"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "bearer"
+          },
+          "expires_in": {
+            "type": "integer",
+            "example": 3600
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid" },
+              "email": { "type": "string", "format": "email" }
+            }
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "required": ["id", "name_ar", "name_en", "image_url", "created_at"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+          },
+          "name_ar": {
+            "type": "string",
+            "description": "Product name in Arabic",
+            "example": "طقم أقراص فرامل سيراميك بريمبو عالي الأداء"
+          },
+          "name_en": {
+            "type": "string",
+            "description": "Product name in English",
+            "example": "Brembo High-Performance Ceramic Brake Discs Kit"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://your-project-ref.supabase.co/storage/v1/object/public/product-images/parts/brembo.jpg"
+          },
+          "category": {
+            "type": "string",
+            "example": "Brakes"
+          },
+          "part_number": {
+            "type": "string",
+            "example": "BRM-9942-X"
+          },
+          "price": {
+            "type": "number",
+            "example": 249.99
+          },
+          "in_stock": {
+            "type": "boolean",
+            "example": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-09T14:30:00Z"
+          }
+        }
+      },
+      "CreateProductRequest": {
+        "type": "object",
+        "required": ["name_ar", "name_en", "image_url"],
+        "properties": {
+          "name_ar": {
+            "type": "string",
+            "example": "شاحن توربيني مزدوج Garrett GT3582R معدل"
+          },
+          "name_en": {
+            "type": "string",
+            "example": "Garrett GT3582R Twin-Scroll Performance Turbocharger"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://your-project-ref.supabase.co/storage/v1/object/public/product-images/parts/turbo.jpg"
+          },
+          "category": {
+            "type": "string",
+            "example": "Engine"
+          },
+          "part_number": {
+            "type": "string",
+            "example": "GRT-3582-R"
+          },
+          "price": {
+            "type": "number",
+            "example": 899.50
+          },
+          "in_stock": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "UpdateProductRequest": {
+        "type": "object",
+        "properties": {
+          "name_ar": { "type": "string" },
+          "name_en": { "type": "string" },
+          "image_url": { "type": "string", "format": "uri" },
+          "category": { "type": "string" },
+          "part_number": { "type": "string" },
+          "price": { "type": "number" },
+          "in_stock": { "type": "boolean" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer", "example": 400 },
+          "message": { "type": "string", "example": "Invalid login credentials" }
+        }
+      }
+    }
+  }
+}
