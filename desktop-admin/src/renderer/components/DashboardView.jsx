@@ -40,7 +40,7 @@ export const DashboardView = () => {
 
   // Fetch products from Supabase
   const fetchProducts = async () => {
-    if (isDemoUser || !supabase) {
+    if (!supabase) {
       return;
     }
 
@@ -84,7 +84,7 @@ export const DashboardView = () => {
     try {
       setDeleteLoading(true);
 
-      if (!isDemoUser && supabase) {
+      if (supabase) {
         // Delete record from Supabase table
         const { error } = await supabase
           .from('products')

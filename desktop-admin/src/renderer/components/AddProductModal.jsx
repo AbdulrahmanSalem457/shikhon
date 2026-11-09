@@ -102,8 +102,8 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
       let finalImageUrl = imagePreview;
 
-      // In Demo mode or if Supabase not ready, simulate upload
-      if (isDemo || !supabase) {
+      // If Supabase not connected yet, simulate locally
+      if (!supabase) {
         setStatusMessage(t('form.savingProduct'));
         const newProduct = {
           id: 'demo-' + Date.now(),

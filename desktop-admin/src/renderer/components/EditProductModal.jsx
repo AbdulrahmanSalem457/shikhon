@@ -56,7 +56,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
 
       // If user selected a new image file
       if (imageFile) {
-        if (!isDemo && supabase) {
+        if (supabase) {
           const { publicUrl } = await uploadImageToStorage(imageFile);
           updatedImageUrl = publicUrl;
         } else {
@@ -73,7 +73,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
         price: price ? parseFloat(price) : null,
       };
 
-      if (!isDemo && supabase) {
+      if (supabase) {
         const { data, error } = await supabase
           .from('products')
           .update(updatedFields)
