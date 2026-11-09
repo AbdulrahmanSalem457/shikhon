@@ -1,12 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-const getEnvOrStored = (key, fallback = '') => {
-  return localStorage.getItem(key) || import.meta.env[key] || fallback;
-};
+const DEFAULT_URL = 'https://ugmtruurtlyieptuzhar.supabase.co';
+const DEFAULT_KEY = 'sb_publishable_xSR0yiIJFDYy47qtibxLNA_EQlfuLdv';
 
 export const getSupabaseConfig = () => {
-  const url = getEnvOrStored('VITE_SUPABASE_URL', '');
-  const anonKey = getEnvOrStored('VITE_SUPABASE_ANON_KEY', '');
+  const url = localStorage.getItem('VITE_SUPABASE_URL') || import.meta.env.VITE_SUPABASE_URL || DEFAULT_URL;
+  const anonKey = localStorage.getItem('VITE_SUPABASE_ANON_KEY') || import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_KEY;
   const isConfigured = Boolean(url && anonKey && !url.includes('your-project-ref'));
   return { url, anonKey, isConfigured };
 };
@@ -18,9 +17,7 @@ export const saveSupabaseConfig = (url, anonKey) => {
 
 const initialConfig = getSupabaseConfig();
 
-export let supabase = initialConfig.isConfigured
-  ? createClient(initialConfig.url, initialConfig.anonKey)
-  : null;
+export let supabase = createClient(initialConfig.url, initialConfig.anonKey);
 
 export const reinitializeSupabase = (url, anonKey) => {
   saveSupabaseConfig(url, anonKey);
@@ -66,7 +63,6 @@ export const deleteImageFromStorage = async (imageUrl) => {
   if (!supabase || !imageUrl) return;
 
   try {
-    // Extract path if it is from Supabase storage
     const bucketMarker = '/product-images/';
     if (imageUrl.includes(bucketMarker)) {
       const path = imageUrl.split(bucketMarker)[1];
