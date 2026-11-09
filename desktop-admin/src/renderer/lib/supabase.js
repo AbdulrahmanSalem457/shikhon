@@ -1,23 +1,33 @@
 import { createClient } from '@supabase/supabase-js';
 
-const DEFAULT_URL = 'https://ugmtruurtlyieptuzhar.supabase.co';
-const DEFAULT_KEY = 'sb_publishable_xSR0yiIJFDYy47qtibxLNA_EQlfuLdv';
+export const DEFAULT_URL = 'https://ugmtruurtlyieptuzhar.supabase.co';
+export const DEFAULT_KEY = 'sb_publishable_xSR0yiIJFDYy47qtibxLNA_EQlfuLdv';
+
+// Always guarantee project URL and key are stored and synchronized
+localStorage.setItem('VITE_SUPABASE_URL', DEFAULT_URL);
+localStorage.setItem('VITE_SUPABASE_ANON_KEY', DEFAULT_KEY);
 
 export const getSupabaseConfig = () => {
-  const url = localStorage.getItem('VITE_SUPABASE_URL') || import.meta.env.VITE_SUPABASE_URL || DEFAULT_URL;
-  const anonKey = localStorage.getItem('VITE_SUPABASE_ANON_KEY') || import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_KEY;
-  const isConfigured = Boolean(url && anonKey && !url.includes('your-project-ref'));
-  return { url, anonKey, isConfigured };
+  return {
+    url: DEFAULT_URL,
+    anonKey: DEFAULT_KEY,
+    isConfigured: true,
+  };
 };
 
 export const saveSupabaseConfig = (url, anonKey) => {
-  localStorage.setItem('VITE_SUPABASE_URL', url.trim());
-  localStorage.setItem('VITE_SUPABASE_ANON_KEY', anonKey.trim());
+  const cleanUrl = url.trim().replace(/\/+$/, '');
+  const cleanKey = anonKey.trim();
+  localStorage.setItem('VITE_SUPABASE_URL', cleanUrl);
+  localStorage.setItem('VITE_SUPABASE_ANON_KEY', cleanKey);
 };
 
-const initialConfig = getSupabaseConfig();
-
-export let supabase = createClient(initialConfig.url, initialConfig.anonKey);
+export let supabase = createClient(DEFAULT_URL, DEFAULT_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  }
+});
 
 export const reinitializeSupabase = (url, anonKey) => {
   saveSupabaseConfig(url, anonKey);
@@ -31,20 +41,28 @@ export const uploadImageToStorage = async (file) => {
     throw new Error('Supabase client is not configured.');
   }
 
-  // Generate clean unique filename: timestamp-random-filename
-  const fileExt = file.name.split('.').pop();
+  const fileExt = (file.name || 'image.jpg').split('.').pop().toLowerCase();
   const cleanFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-  const filePath = `parts/${cleanFileName}`;
+  const filePath = cleanFileName;
+
+  const mimeType = file.type || (
+    fileExt === 'png' ? 'image/png' :
+    fileExt === 'webp' ? 'image/webp' :
+    fileExt === 'avif' ? 'image/avif' :
+    'image/jpeg'
+  );
 
   const { data, error } = await supabase.storage
     .from('product-images')
     .upload(filePath, file, {
+      contentType: mimeType,
       cacheControl: '3600',
-      upsert: false
+      upsert: true,
     });
 
   if (error) {
-    throw error;
+    console.error('Storage upload error:', error);
+    throw new Error(error.message || 'Error uploading image to storage');
   }
 
   // Retrieve public URL
@@ -54,7 +72,7 @@ export const uploadImageToStorage = async (file) => {
 
   return {
     path: filePath,
-    publicUrl: publicUrlData.publicUrl
+    publicUrl: publicUrlData.publicUrl,
   };
 };
 
