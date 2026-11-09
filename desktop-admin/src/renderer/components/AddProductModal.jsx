@@ -4,12 +4,10 @@ import { uploadImageToStorage, supabase } from '../lib/supabase';
 import { 
   X, 
   UploadCloud, 
-  Image as ImageIcon, 
   Check, 
   AlertCircle, 
   ArrowLeftRight, 
-  Loader2, 
-  Layers 
+  Loader2 
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -99,34 +97,16 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
     try {
       setLoading(true);
-
       let finalImageUrl = imagePreview;
 
-      // If Supabase not connected yet, simulate locally
-      if (!supabase) {
-        setStatusMessage(t('form.savingProduct'));
-        const newProduct = {
-          id: 'demo-' + Date.now(),
-          name_ar: nameAr,
-          name_en: nameEn,
-          image_url: imagePreview,
-          category,
-          part_number: partNumber || 'SHK-' + Math.floor(1000 + Math.random() * 9000),
-          price: price ? parseFloat(price) : null,
-          in_stock: true,
-          created_at: new Date().toISOString()
-        };
-        onProductAdded(newProduct);
-        onClose();
-        return;
+      // Upload image to Supabase Storage if file exists
+      if (imageFile) {
+        setStatusMessage(t('form.uploadingImage'));
+        const uploadRes = await uploadImageToStorage(imageFile);
+        finalImageUrl = typeof uploadRes === 'string' ? uploadRes : (uploadRes?.publicUrl || String(uploadRes));
       }
 
-      // 1. Upload directly to Supabase Storage 'product-images'
-      setStatusMessage(t('form.uploadingImage'));
-      const { publicUrl } = await uploadImageToStorage(imageFile);
-      finalImageUrl = publicUrl;
-
-      // 2. Insert into 'products' table
+      // Insert record to Supabase
       setStatusMessage(t('form.savingProduct'));
       const productPayload = {
         name_ar: nameAr.trim(),
@@ -158,28 +138,28 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-2xl liquid-glass rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-2xl liquid-glass rounded-3xl p-6 sm:p-8 shadow-2xl my-8">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 end-5 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
+          className="absolute top-5 end-5 p-1.5 rounded-full liquid-pill text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Title */}
-        <h2 className="text-xl font-black text-white mb-1">
+        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-1">
           {t('form.addNewTitle')}
         </h2>
-        <p className="text-xs text-slate-400 mb-6">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
           {t('dashboard.subtitle')}
         </p>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-2xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
@@ -189,7 +169,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
           
           {/* Drag & Drop Image Upload Zone */}
           <div>
-            <label className="text-xs font-bold text-slate-300 block mb-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
               {t('form.imageUploadLabel')}
             </label>
             
@@ -200,8 +180,8 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
               onClick={() => fileInputRef.current?.click()}
               className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer p-5 flex flex-col items-center justify-center text-center ${
                 isDragging
-                  ? 'border-cyan-400 bg-cyan-500/15'
-                  : 'border-white/20 hover:border-cyan-400/40 bg-slate-950/40 hover:bg-slate-950/60'
+                  ? 'border-sky-500 bg-sky-500/10 dark:border-cyan-400 dark:bg-cyan-500/15'
+                  : 'border-slate-300 hover:border-sky-500/50 dark:border-white/20 dark:hover:border-cyan-400/40 bg-slate-100/60 hover:bg-slate-100/90 dark:bg-slate-950/40 dark:hover:bg-slate-950/60'
               }`}
             >
               <input
@@ -217,18 +197,18 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="max-h-40 object-contain rounded-xl shadow-lg"
+                    className="max-h-40 object-contain rounded-xl shadow-md"
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-xl transition-opacity text-xs font-bold text-white">
+                  <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-xl transition-opacity text-xs font-bold text-white">
                     {t('form.replaceImageText')}
                   </div>
                 </div>
               ) : (
                 <>
-                  <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-2.5">
-                    <UploadCloud className="w-6 h-6 text-cyan-400" />
+                  <div className="w-12 h-12 rounded-2xl bg-sky-500/10 dark:bg-cyan-500/10 border border-sky-500/20 dark:border-cyan-500/30 flex items-center justify-center mb-2.5">
+                    <UploadCloud className="w-6 h-6 text-sky-600 dark:text-cyan-400" />
                   </div>
-                  <p className="text-xs font-semibold text-slate-200">
+                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                     {t('form.dragDropText')}
                   </p>
                   <p className="text-[11px] text-slate-500 mt-1">
@@ -245,13 +225,13 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
             {/* Arabic Name */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-slate-300">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                   {t('form.nameArLabel')}
                 </label>
                 <button
                   type="button"
                   onClick={copyArToEn}
-                  className="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                  className="text-[11px] text-sky-600 dark:text-cyan-400 hover:underline flex items-center gap-1 cursor-pointer"
                   title={t('form.copyNameToEn')}
                 >
                   <span>{t('form.copyNameToEn')}</span>
@@ -265,20 +245,20 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={nameAr}
                 onChange={(e) => setNameAr(e.target.value)}
                 placeholder={t('form.nameArPlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-white text-xs font-medium"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
               />
             </div>
 
             {/* English Name */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-slate-300">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                   {t('form.nameEnLabel')}
                 </label>
                 <button
                   type="button"
                   onClick={copyEnToAr}
-                  className="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                  className="text-[11px] text-sky-600 dark:text-cyan-400 hover:underline flex items-center gap-1 cursor-pointer"
                   title={t('form.copyNameToAr')}
                 >
                   <span>{t('form.copyNameToAr')}</span>
@@ -292,7 +272,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
                 placeholder={t('form.nameEnPlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-white text-xs font-medium"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
               />
             </div>
 
@@ -303,16 +283,16 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
             
             {/* Category */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
                 {t('form.categoryLabel')}
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl glass-input text-white text-xs bg-slate-900"
+                className="w-full px-3 py-2.5 rounded-xl glass-input text-xs"
               >
                 {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat} className="bg-slate-900 text-white">
+                  <option key={cat} value={cat} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     {cat}
                   </option>
                 ))}
@@ -321,7 +301,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
             {/* Part Number */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
                 {t('form.partNumberLabel')}
               </label>
               <input
@@ -329,13 +309,13 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={partNumber}
                 onChange={(e) => setPartNumber(e.target.value)}
                 placeholder="BRM-9942-X"
-                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-white text-xs font-mono"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-mono"
               />
             </div>
 
             {/* Price */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
                 {t('form.priceLabel')}
               </label>
               <input
@@ -345,7 +325,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="199.99"
-                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-white text-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
               />
             </div>
 
@@ -353,10 +333,10 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
           {/* Actions & Status */}
           <div className="pt-4 flex items-center justify-between">
-            <div className="text-xs text-cyan-300 font-medium flex items-center gap-2">
+            <div className="text-xs text-sky-600 dark:text-cyan-300 font-medium flex items-center gap-2">
               {loading && (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   <span>{statusMessage}</span>
                 </>
               )}
@@ -367,7 +347,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2.5 rounded-xl liquid-pill text-slate-600 dark:text-slate-300 text-xs font-semibold cursor-pointer"
               >
                 {t('form.cancelBtn')}
               </button>
@@ -375,7 +355,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-cyan-500/25 disabled:opacity-50 flex items-center gap-1.5"
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-bold shadow-md shadow-sky-500/20 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
               >
                 <Check className="w-4 h-4" />
                 <span>{t('form.saveBtn')}</span>

@@ -15,19 +15,14 @@ import {
   RefreshCw, 
   Layers, 
   Package, 
-  CheckCircle2, 
-  Tag, 
-  ExternalLink 
+  CheckCircle2
 } from 'lucide-react';
-
-// Initial products list is completely empty - ready for user data
-const INITIAL_DEMO_PRODUCTS = [];
 
 export const DashboardView = () => {
   const { t, language, isRTL } = useLanguage();
   const { isDemoUser } = useAuth();
 
-  const [products, setProducts] = useState(INITIAL_DEMO_PRODUCTS);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
@@ -53,8 +48,8 @@ export const DashboardView = () => {
 
       if (error) {
         console.warn('Error fetching products:', error);
-      } else if (data && data.length > 0) {
-        setProducts(data);
+      } else {
+        setProducts(data || []);
       }
     } catch (err) {
       console.error('Fetch error:', err);
@@ -85,7 +80,6 @@ export const DashboardView = () => {
       setDeleteLoading(true);
 
       if (supabase) {
-        // Delete record from Supabase table
         const { error } = await supabase
           .from('products')
           .delete()
@@ -93,7 +87,6 @@ export const DashboardView = () => {
 
         if (error) throw error;
 
-        // Optionally delete image from storage
         if (deletingProduct.image_url) {
           await deleteImageFromStorage(deletingProduct.image_url);
         }
@@ -125,59 +118,59 @@ export const DashboardView = () => {
       
       {/* KPI Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="liquid-glass rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+        <div className="liquid-glass rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <span className="text-xs text-slate-400 block font-medium">
+            <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium">
               {t('dashboard.totalParts')}
             </span>
-            <span className="text-2xl font-black text-white mt-1 block">
+            <span className="text-2xl font-black text-slate-900 dark:text-white mt-1 block">
               {products.length}
             </span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+          <div className="w-10 h-10 rounded-xl bg-sky-500/10 dark:bg-cyan-500/15 border border-sky-500/20 dark:border-cyan-500/30 flex items-center justify-center text-sky-600 dark:text-cyan-400">
             <Package className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="liquid-glass rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+        <div className="liquid-glass rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <span className="text-xs text-slate-400 block font-medium">
+            <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium">
               {t('dashboard.inStock')}
             </span>
-            <span className="text-2xl font-black text-emerald-400 mt-1 block">
+            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 block">
               {products.filter(p => p.in_stock !== false).length}
             </span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 dark:border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="liquid-glass rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+        <div className="liquid-glass rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <span className="text-xs text-slate-400 block font-medium">
+            <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium">
               {t('dashboard.categoriesCount')}
             </span>
-            <span className="text-2xl font-black text-indigo-400 mt-1 block">
+            <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400 mt-1 block">
               {new Set(products.map(p => p.category || 'General')).size}
             </span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/15 border border-indigo-500/20 dark:border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
             <Layers className="w-5 h-5" />
           </div>
         </div>
       </div>
 
       {/* Main Action Header */}
-      <div className="liquid-glass rounded-3xl p-5 sm:p-6 border border-white/15 mb-6 shadow-xl">
+      <div className="liquid-glass rounded-3xl p-5 sm:p-6 mb-6 shadow-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Title & Sub */}
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-white">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
               {t('dashboard.title')}
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {t('dashboard.subtitle')}
             </p>
           </div>
@@ -185,7 +178,7 @@ export const DashboardView = () => {
           {/* Add Product Button */}
           <button
             onClick={() => setIsAddOpen(true)}
-            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/25 transition-all self-start md:self-auto"
+            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-sky-500/20 transition-all self-start md:self-auto cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>{t('dashboard.addProductBtn')}</span>
@@ -194,7 +187,7 @@ export const DashboardView = () => {
         </div>
 
         {/* Search & View Controls Bar */}
-        <div className="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
@@ -204,7 +197,7 @@ export const DashboardView = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('dashboard.searchPlaceholder')}
-              className={`w-full py-2 rounded-xl glass-input text-white text-xs ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
+              className={`w-full py-2 rounded-xl glass-input text-xs ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
             />
           </div>
 
@@ -215,7 +208,7 @@ export const DashboardView = () => {
             <button
               onClick={fetchProducts}
               disabled={loading}
-              className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-xl liquid-pill text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
               title={t('dashboard.refresh')}
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -224,10 +217,10 @@ export const DashboardView = () => {
             {/* Grid View button */}
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-xl border transition-all ${
+              className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
-                  : 'bg-white/[0.04] text-slate-400 border-white/10 hover:text-white'
+                  ? 'bg-sky-500 text-white border-sky-500 shadow-sm'
+                  : 'liquid-pill text-slate-500 dark:text-slate-400'
               }`}
               title={t('dashboard.viewGrid')}
             >
@@ -237,10 +230,10 @@ export const DashboardView = () => {
             {/* Table View button */}
             <button
               onClick={() => setViewMode('table')}
-              className={`p-2 rounded-xl border transition-all ${
+              className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 viewMode === 'table'
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
-                  : 'bg-white/[0.04] text-slate-400 border-white/10 hover:text-white'
+                  ? 'bg-sky-500 text-white border-sky-500 shadow-sm'
+                  : 'liquid-pill text-slate-500 dark:text-slate-400'
               }`}
               title={t('dashboard.viewTable')}
             >
@@ -254,12 +247,12 @@ export const DashboardView = () => {
 
       {/* Product Display: Grid or Table */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-16 liquid-glass rounded-3xl border border-white/10">
-          <Package className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-          <h3 className="text-sm font-bold text-white mb-1">
+        <div className="text-center py-16 liquid-glass rounded-3xl">
+          <Package className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-1">
             {t('table.noData')}
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             اضغط على زر "إضافة قطعة غيار جديدة" لبدء إضافة القطع.
           </p>
         </div>
@@ -273,43 +266,43 @@ export const DashboardView = () => {
             return (
               <div
                 key={product.id}
-                className="liquid-glass-card rounded-3xl p-4 flex flex-col justify-between border border-white/15"
+                className="liquid-glass-card rounded-3xl p-4 flex flex-col justify-between"
               >
                 {/* Image */}
-                <div className="w-full h-40 rounded-2xl bg-slate-950/70 p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-white/10">
+                <div className="w-full h-40 rounded-2xl bg-slate-100 dark:bg-slate-950/70 p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-slate-200/60 dark:border-white/10">
                   <img
                     src={product.image_url}
                     alt={displayName}
-                    className="w-full h-full object-contain filter drop-shadow-md"
+                    className="w-full h-full object-contain filter drop-shadow-sm"
                   />
-                  <span className="absolute top-2 start-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/60 border border-white/15 text-cyan-300">
+                  <span className="absolute top-2 start-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/80 dark:bg-black/60 border border-slate-200/50 dark:border-white/15 text-sky-700 dark:text-cyan-300">
                     {product.category || 'General'}
                   </span>
                 </div>
 
                 {/* Details */}
                 <div className="flex-1">
-                  <span className="text-[10px] font-mono font-bold text-slate-400 block mb-1">
+                  <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 block mb-1">
                     {product.part_number || product.id?.slice(0, 8)}
                   </span>
-                  <h3 className="text-sm font-bold text-white line-clamp-2 leading-snug">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug">
                     {displayName}
                   </h3>
-                  <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
                     {subName}
                   </p>
                   {product.price && (
-                    <div className="mt-2 text-xs font-black text-white">
+                    <div className="mt-2 text-xs font-black text-slate-900 dark:text-white">
                       ${product.price}
                     </div>
                   )}
                 </div>
 
                 {/* Actions */}
-                <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between gap-2">
                   <button
                     onClick={() => setEditingProduct(product)}
-                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-cyan-300 border border-white/10 text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
+                    className="flex-1 py-1.5 px-2.5 rounded-xl liquid-pill text-sky-600 dark:text-cyan-300 text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer hover:border-sky-400/50"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                     <span>{t('table.edit')}</span>
@@ -317,7 +310,7 @@ export const DashboardView = () => {
 
                   <button
                     onClick={() => setDeletingProduct(product)}
-                    className="p-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-colors"
+                    className="p-1.5 rounded-xl bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 transition-colors cursor-pointer"
                     title={t('table.delete')}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -330,10 +323,10 @@ export const DashboardView = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="liquid-glass rounded-3xl overflow-hidden border border-white/15 shadow-xl">
+        <div className="liquid-glass rounded-3xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-start text-xs">
-              <thead className="bg-white/[0.04] border-b border-white/10 text-slate-400 uppercase tracking-wider text-[11px]">
+              <thead className="bg-slate-100/60 dark:bg-white/[0.04] border-b border-slate-200/80 dark:border-white/10 text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="p-4">{t('table.image')}</th>
                   <th className="p-4">{t('table.nameAr')}</th>
@@ -344,45 +337,45 @@ export const DashboardView = () => {
                   <th className="p-4 text-end">{t('table.actions')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-slate-200/60 dark:divide-white/5">
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={product.id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors">
                     <td className="p-4">
                       <img
                         src={product.image_url}
                         alt=""
-                        className="w-12 h-12 object-contain rounded-xl bg-slate-950/70 p-1 border border-white/10"
+                        className="w-12 h-12 object-contain rounded-xl bg-slate-100 dark:bg-slate-950/70 p-1 border border-slate-200/60 dark:border-white/10"
                       />
                     </td>
-                    <td className="p-4 font-bold text-white max-w-xs truncate" dir="rtl">
+                    <td className="p-4 font-bold text-slate-900 dark:text-white max-w-xs truncate" dir="rtl">
                       {product.name_ar}
                     </td>
-                    <td className="p-4 font-medium text-slate-300 max-w-xs truncate" dir="ltr">
+                    <td className="p-4 font-medium text-slate-600 dark:text-slate-300 max-w-xs truncate" dir="ltr">
                       {product.name_en}
                     </td>
                     <td className="p-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-500/15 border border-cyan-500/30 text-cyan-300">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-50 dark:bg-cyan-500/15 border border-sky-200 dark:border-cyan-500/30 text-sky-700 dark:text-cyan-300">
                         {product.category || 'General'}
                       </span>
                     </td>
-                    <td className="p-4 font-mono font-semibold text-slate-400">
+                    <td className="p-4 font-mono font-semibold text-slate-500 dark:text-slate-400">
                       {product.part_number || '—'}
                     </td>
-                    <td className="p-4 font-bold text-white">
+                    <td className="p-4 font-bold text-slate-900 dark:text-white">
                       {product.price ? `$${product.price}` : '—'}
                     </td>
                     <td className="p-4 text-end">
                       <div className="inline-flex items-center gap-1.5">
                         <button
                           onClick={() => setEditingProduct(product)}
-                          className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-cyan-300 transition-colors"
+                          className="p-1.5 rounded-lg liquid-pill text-sky-600 dark:text-cyan-300 transition-colors cursor-pointer"
                           title={t('table.edit')}
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setDeletingProduct(product)}
-                          className="p-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-400 transition-colors"
+                          className="p-1.5 rounded-lg bg-red-50 dark:bg-red-500/15 hover:bg-red-100 dark:hover:bg-red-500/25 text-red-600 dark:text-red-400 transition-colors cursor-pointer"
                           title={t('table.delete')}
                         >
                           <Trash2 className="w-3.5 h-3.5" />

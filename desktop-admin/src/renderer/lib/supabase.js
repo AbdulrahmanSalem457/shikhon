@@ -70,9 +70,12 @@ export const uploadImageToStorage = async (file) => {
     .from('product-images')
     .getPublicUrl(filePath);
 
+  const url = publicUrlData.publicUrl;
   return {
     path: filePath,
-    publicUrl: publicUrlData.publicUrl,
+    publicUrl: url,
+    toString() { return url; },
+    valueOf() { return url; }
   };
 };
 

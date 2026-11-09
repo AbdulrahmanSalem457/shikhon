@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProductCatalog } from './components/ProductCatalog';
@@ -80,9 +81,11 @@ const MainContent = () => {
 
 export function App() {
   return (
-    <LanguageProvider>
-      <MainContent />
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <MainContent />
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

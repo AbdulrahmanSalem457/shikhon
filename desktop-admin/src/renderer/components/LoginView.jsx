@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { getSupabaseConfig, saveSupabaseConfig, reinitializeSupabase } from '../lib/supabase';
-import { Lock, Mail, Shield, AlertCircle, Sparkles, ChevronDown, Database, Check, UserPlus, LogIn } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
+import { getSupabaseConfig, reinitializeSupabase } from '../lib/supabase';
+import { Lock, Mail, AlertCircle, ChevronDown, Database, Check, UserPlus, LogIn, Sparkles } from 'lucide-react';
 
 export const LoginView = () => {
   const { t, isRTL, language } = useLanguage();
@@ -40,11 +41,9 @@ export const LoginView = () => {
       setLoading(true);
 
       if (mode === 'signup') {
-        // Register new admin account in Supabase
-        const data = await signUpWithPassword(email, password);
+        await signUpWithPassword(email, password);
         setSuccessMsg(language === 'ar' ? 'تم إنشاء الحساب بنجاح! جاري تسجيل الدخول...' : 'Account created successfully! Logging in...');
         
-        // If session created, it automatically logs in, else sign in
         setTimeout(async () => {
           try {
             await loginWithPassword(email, password);
@@ -53,7 +52,6 @@ export const LoginView = () => {
           }
         }, 1200);
       } else {
-        // Standard Sign In
         await loginWithPassword(email, password);
       }
     } catch (err) {
@@ -70,38 +68,38 @@ export const LoginView = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-[calc(100vh-65px)] flex items-center justify-center p-4 relative overflow-hidden transition-colors">
       
-      {/* Background Animated Aurora Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-cyan-600/20 via-blue-600/20 to-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+      {/* Background Calm Ambient Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-sky-400/10 via-blue-400/10 to-indigo-400/10 dark:from-cyan-600/20 dark:via-blue-600/20 dark:to-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10 my-8">
         
-        {/* Brand Icon Header */}
+        {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto rounded-3xl liquid-pill flex items-center justify-center p-3 border border-cyan-400/40 shadow-xl shadow-cyan-500/10 mb-4 animate-float">
-            <Shield className="w-8 h-8 text-cyan-400" />
+          <div className="w-16 h-16 mx-auto rounded-3xl liquid-pill flex items-center justify-center p-2.5 mb-4 shadow-sm">
+            <BrandLogo className="w-full h-full" />
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             {t('brand.name')}
           </h1>
-          <p className="text-xs uppercase tracking-widest font-bold text-cyan-300 mt-1">
+          <p className="text-xs uppercase tracking-widest font-bold text-sky-600 dark:text-cyan-300 mt-1">
             {t('brand.adminTitle')}
           </p>
         </div>
 
         {/* Login Liquid Glass Card */}
-        <div className="liquid-glass rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl relative">
+        <div className="liquid-glass rounded-3xl p-6 sm:p-8 shadow-xl relative">
           
           {/* Mode Switcher: Sign In vs Sign Up */}
-          <div className="flex p-1 rounded-2xl bg-white/[0.04] border border-white/10 mb-6">
+          <div className="flex p-1 rounded-2xl liquid-pill mb-6">
             <button
               type="button"
               onClick={() => { setMode('signin'); setErrorMsg(''); setSuccessMsg(''); }}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 mode === 'signin'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <LogIn className="w-3.5 h-3.5" />
@@ -111,10 +109,10 @@ export const LoginView = () => {
             <button
               type="button"
               onClick={() => { setMode('signup'); setErrorMsg(''); setSuccessMsg(''); }}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 mode === 'signup'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -123,12 +121,12 @@ export const LoginView = () => {
           </div>
 
           <div className="mb-5">
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">
               {mode === 'signin' 
                 ? (language === 'ar' ? 'تسجيل دخول المشرف' : 'Admin Sign In')
                 : (language === 'ar' ? 'إنشاء حساب مشرف جديد في Supabase' : 'Create New Supabase Admin Account')}
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {mode === 'signin'
                 ? t('auth.subtitle')
                 : (language === 'ar' ? 'أدخل بريدك وكلمة المرور لإنشاء حسابك فوراً' : 'Enter your email & password to register')}
@@ -137,7 +135,7 @@ export const LoginView = () => {
 
           {/* Success Banner */}
           {successMsg && (
-            <div className="mb-4 p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2">
               <Check className="w-4 h-4 shrink-0" />
               <span>{successMsg}</span>
             </div>
@@ -145,7 +143,7 @@ export const LoginView = () => {
 
           {/* Error Banner */}
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-2xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -155,7 +153,7 @@ export const LoginView = () => {
             
             {/* Email Field */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
                 {t('auth.email')}
               </label>
               <div className="relative">
@@ -166,14 +164,14 @@ export const LoginView = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@shikhon-parts.com"
-                  className={`w-full py-2.5 rounded-xl glass-input text-white text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
+                  className={`w-full py-2.5 rounded-xl glass-input text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
                 {t('auth.password')}
               </label>
               <div className="relative">
@@ -185,7 +183,7 @@ export const LoginView = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full py-2.5 rounded-xl glass-input text-white text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
+                  className={`w-full py-2.5 rounded-xl glass-input text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
                 />
               </div>
             </div>
@@ -194,7 +192,7 @@ export const LoginView = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all duration-200 disabled:opacity-50"
+              className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition-all duration-200 disabled:opacity-50 cursor-pointer"
             >
               {loading 
                 ? (mode === 'signup' ? 'جاري إنشاء الحساب...' : t('auth.loggingIn'))
@@ -204,13 +202,13 @@ export const LoginView = () => {
           </form>
 
           {/* Quick Demo Access Mode */}
-          <div className="mt-6 pt-5 border-t border-white/10 text-center">
+          <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10 text-center">
             <button
               type="button"
               onClick={loginAsDemo}
-              className="w-full py-2 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2 px-3 rounded-xl liquid-pill text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>{t('auth.demoLogin')}</span>
             </button>
           </div>
@@ -220,41 +218,41 @@ export const LoginView = () => {
             <button
               type="button"
               onClick={() => setShowConfig(!showConfig)}
-              className="w-full text-slate-400 hover:text-slate-200 text-[11px] font-medium flex items-center justify-between"
+              className="w-full text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-[11px] font-medium flex items-center justify-between cursor-pointer"
             >
               <span className="flex items-center gap-1.5">
-                <Database className="w-3 h-3 text-cyan-400" />
+                <Database className="w-3 h-3 text-sky-600 dark:text-cyan-400" />
                 <span>{t('auth.supabaseConfig')}</span>
               </span>
               <ChevronDown className={`w-3.5 h-3.5 transform transition-transform ${showConfig ? 'rotate-180' : ''}`} />
             </button>
 
             {showConfig && (
-              <div className="mt-3 p-3 rounded-2xl bg-black/40 border border-white/10 space-y-2.5 text-xs">
+              <div className="mt-3 p-3 rounded-2xl liquid-pill space-y-2.5 text-xs">
                 <div>
-                  <span className="text-[10px] text-slate-400 block mb-1">{t('auth.supabaseUrl')}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-1">{t('auth.supabaseUrl')}</span>
                   <input
                     type="text"
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
                     placeholder="https://xyz.supabase.co"
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-white text-[11px]"
+                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-[11px]"
                   />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 block mb-1">{t('auth.supabaseKey')}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-1">{t('auth.supabaseKey')}</span>
                   <input
                     type="password"
                     value={keyInput}
                     onChange={(e) => setKeyInput(e.target.value)}
                     placeholder="eyJhbGciOi..."
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-white text-[11px]"
+                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-[11px]"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleSaveConfig}
-                  className="w-full py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 font-semibold text-[11px] transition-colors"
+                  className="w-full py-1.5 rounded-lg bg-sky-500/15 text-sky-700 dark:bg-cyan-500/20 dark:text-cyan-300 font-semibold text-[11px] transition-colors cursor-pointer"
                 >
                   {t('auth.saveConfig')}
                 </button>
@@ -265,7 +263,7 @@ export const LoginView = () => {
         </div>
 
         {/* Footnote */}
-        <p className="text-center text-[11px] text-slate-500 mt-6">
+        <p className="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-6">
           Shikhon Automotive Spare Parts Platform • Supabase Auth
         </p>
 
