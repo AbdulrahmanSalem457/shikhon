@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { getSupabaseConfig, saveSupabaseConfig, reinitializeSupabase } from '../lib/supabase';
-import { Lock, Mail, Shield, AlertCircle, Sparkles, ChevronDown, Database, ArrowRight } from 'lucide-react';
+import { Lock, Mail, Shield, AlertCircle, Sparkles, ChevronDown, Database, Check, UserPlus, LogIn } from 'lucide-react';
 
 export const LoginView = () => {
-  const { t, isRTL } = useLanguage();
-  const { loginWithPassword, loginAsDemo } = useAuth();
+  const { t, isRTL, language } = useLanguage();
+  const { loginWithPassword, signUpWithPassword, loginAsDemo } = useAuth();
 
+  const [mode, setMode] = useState('signin'); // 'signin' or 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   // Supabase quick config toggle
   const [showConfig, setShowConfig] = useState(false);
@@ -22,17 +24,40 @@ export const LoginView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
 
     if (!email || !password) {
       setErrorMsg(t('auth.fillAllFields'));
       return;
     }
 
+    if (password.length < 6) {
+      setErrorMsg(language === 'ar' ? 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' : 'Password must be at least 6 characters');
+      return;
+    }
+
     try {
       setLoading(true);
-      await loginWithPassword(email, password);
+
+      if (mode === 'signup') {
+        // Register new admin account in Supabase
+        const data = await signUpWithPassword(email, password);
+        setSuccessMsg(language === 'ar' ? 'تم إنشاء الحساب بنجاح! جاري تسجيل الدخول...' : 'Account created successfully! Logging in...');
+        
+        // If session created, it automatically logs in, else sign in
+        setTimeout(async () => {
+          try {
+            await loginWithPassword(email, password);
+          } catch (ign) {
+            setMode('signin');
+          }
+        }, 1200);
+      } else {
+        // Standard Sign In
+        await loginWithPassword(email, password);
+      }
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('Auth error:', err);
       setErrorMsg(err.message || t('auth.invalidLogin'));
     } finally {
       setLoading(false);
@@ -68,18 +93,59 @@ export const LoginView = () => {
         {/* Login Liquid Glass Card */}
         <div className="liquid-glass rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl relative">
           
-          <div className="mb-6">
-            <h2 className="text-lg font-bold text-white">
-              {t('auth.title')}
+          {/* Mode Switcher: Sign In vs Sign Up */}
+          <div className="flex p-1 rounded-2xl bg-white/[0.04] border border-white/10 mb-6">
+            <button
+              type="button"
+              onClick={() => { setMode('signin'); setErrorMsg(''); setSuccessMsg(''); }}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                mode === 'signin'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>{language === 'ar' ? 'تسجيل الدخول' : 'Sign In'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setMode('signup'); setErrorMsg(''); setSuccessMsg(''); }}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                mode === 'signup'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span>{language === 'ar' ? 'إنشاء حساب مشرف' : 'Create Account'}</span>
+            </button>
+          </div>
+
+          <div className="mb-5">
+            <h2 className="text-base font-bold text-white">
+              {mode === 'signin' 
+                ? (language === 'ar' ? 'تسجيل دخول المشرف' : 'Admin Sign In')
+                : (language === 'ar' ? 'إنشاء حساب مشرف جديد في Supabase' : 'Create New Supabase Admin Account')}
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              {t('auth.subtitle')}
+            <p className="text-xs text-slate-400 mt-0.5">
+              {mode === 'signin'
+                ? t('auth.subtitle')
+                : (language === 'ar' ? 'أدخل بريدك وكلمة المرور لإنشاء حسابك فوراً' : 'Enter your email & password to register')}
             </p>
           </div>
 
+          {/* Success Banner */}
+          {successMsg && (
+            <div className="mb-4 p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+              <Check className="w-4 h-4 shrink-0" />
+              <span>{successMsg}</span>
+            </div>
+          )}
+
           {/* Error Banner */}
           {errorMsg && (
-            <div className="mb-5 p-3 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -115,6 +181,7 @@ export const LoginView = () => {
                 <input
                   type="password"
                   required
+                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -129,7 +196,9 @@ export const LoginView = () => {
               disabled={loading}
               className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all duration-200 disabled:opacity-50"
             >
-              {loading ? t('auth.loggingIn') : t('auth.loginButton')}
+              {loading 
+                ? (mode === 'signup' ? 'جاري إنشاء الحساب...' : t('auth.loggingIn'))
+                : (mode === 'signup' ? (language === 'ar' ? 'إنشاء حساب المشرف' : 'Create Admin Account') : t('auth.loginButton'))}
             </button>
 
           </form>

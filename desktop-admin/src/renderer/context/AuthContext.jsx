@@ -57,6 +57,19 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const signUpWithPassword = async (email, password) => {
+    if (!supabase) {
+      throw new Error('Supabase is not configured.');
+    }
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+    if (data.session) {
+      setIsDemoUser(false);
+      localStorage.removeItem('shikhon_demo_admin');
+    }
+    return data;
+  };
+
   const loginAsDemo = () => {
     const demoUser = {
       id: 'demo-admin-id',
@@ -88,6 +101,7 @@ export const AuthProvider = ({ children }) => {
       isDemoUser,
       isAuthenticated: Boolean(user),
       loginWithPassword,
+      signUpWithPassword,
       loginAsDemo,
       logout
     }}>
