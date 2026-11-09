@@ -1,380 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Shikhon (شيخون) - Swagger UI API Explorer</title>
+  <title>Shikhon (شيخون) Auto Spare Parts API - Swagger UI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://unpkg.com/swagger-ui-dist@5.18.2/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="https://unpkg.com/swagger-ui-dist@5.18.2/favicon-16x16.png" sizes="16x16" />
   <style>
-    :root {
-      --bg-dark: #070b14;
-      --card-bg: rgba(15, 23, 42, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --cyan: #38bdf8;
-      --cyan-glow: rgba(56, 189, 248, 0.25);
+    html {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
     }
-
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
     body {
       margin: 0;
-      padding: 0;
-      background-color: var(--bg-dark);
-      color: #f1f5f9;
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      min-height: 100vh;
+      background: #fafafa;
     }
-
-    /* Top Liquid Glass App Bar */
-    .header-bar {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border-bottom: 1px solid var(--glass-border);
-      padding: 16px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #0284c7, #6366f1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
-      color: white;
-      box-shadow: 0 0 15px var(--cyan-glow);
-    }
-
-    .brand-title {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #ffffff;
-    }
-
-    .brand-title span {
-      color: var(--cyan);
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .brand-tag {
-      font-size: 11px;
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: #7dd3fc;
-      padding: 2px 8px;
-      border-radius: 9999px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    /* Quick Config Toolbar */
-    .config-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .config-toolbar input {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      min-width: 220px;
-      outline: none;
-      transition: border 0.2s;
-    }
-
-    .config-toolbar input:focus {
-      border-color: var(--cyan);
-    }
-
-    .config-btn {
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
-    }
-
-    .config-btn:hover {
-      background: #0284c7;
-      transform: translateY(-1px);
-    }
-
-    /* Swagger Dark Theme Customization */
-    .swagger-ui {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    .swagger-ui .info {
-      margin-bottom: 24px;
-    }
-
-    .swagger-ui .info .title {
-      color: #fff !important;
-      font-size: 28px !important;
-      font-weight: 800;
-    }
-
-    .swagger-ui .info p, .swagger-ui .info li {
-      color: #94a3b8 !important;
-      font-size: 14px;
-    }
-
-    .swagger-ui .scheme-container {
-      background: rgba(15, 23, 42, 0.6) !important;
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 16px 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      margin-bottom: 24px;
-    }
-
-    .swagger-ui .opblock {
-      background: rgba(15, 23, 42, 0.6) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      border-radius: 16px !important;
-      margin-bottom: 16px !important;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
-      backdrop-filter: blur(12px);
-    }
-
-    .swagger-ui .opblock .opblock-summary {
-      padding: 12px 16px !important;
-    }
-
-    .swagger-ui .opblock .opblock-summary-path {
-      color: #f8fafc !important;
-      font-weight: 700;
-    }
-
-    .swagger-ui .opblock .opblock-summary-description {
-      color: #94a3b8 !important;
-    }
-
-    .swagger-ui .opblock-body {
-      background: rgba(10, 15, 30, 0.8) !important;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-    }
-
-    .swagger-ui .opblock-description-wrapper p,
-    .swagger-ui .response-col_status,
-    .swagger-ui table thead tr th,
-    .swagger-ui .parameter__name,
-    .swagger-ui .parameter__type {
-      color: #cbd5e1 !important;
-    }
-
-    .swagger-ui input[type="text"],
-    .swagger-ui select,
-    .swagger-ui textarea {
-      background: #0f172a !important;
-      color: #e2e8f0 !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      border-radius: 8px !important;
-    }
-
-    .swagger-ui .btn.execute {
-      background: linear-gradient(135deg, #0284c7, #2563eb) !important;
-      border: none !important;
-      color: #fff !important;
-      border-radius: 10px !important;
-      font-weight: 700;
-      padding: 8px 24px !important;
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
-    }
-
-    .swagger-ui .btn.authorize {
-      color: #38bdf8 !important;
-      border-color: #38bdf8 !important;
-      border-radius: 10px;
-    }
-
-    .swagger-ui .btn.authorize svg {
-      fill: #38bdf8 !important;
-    }
-
-    .swagger-ui .dialog-ux .modal-ux {
-      background: #0f172a !important;
-      border: 1px solid var(--glass-border) !important;
-      border-radius: 20px !important;
-      color: #f1f5f9 !important;
-    }
-
-    .swagger-ui .dialog-ux .modal-ux-header h3 {
-      color: #fff !important;
-    }
-
-    /* Testing Quick Tips Box */
-    .quick-tips {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(99, 102, 241, 0.05) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      border-radius: 16px;
-      padding: 16px 20px;
-      margin: 20px 24px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .quick-tips h4 {
-      margin: 0 0 8px 0;
-      color: #38bdf8;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .quick-tips code {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 2px 6px;
-      border-radius: 6px;
-      color: #fde047;
-      font-family: monospace;
+    .topbar {
+      background-color: #1b1b1b !important;
     }
   </style>
 </head>
 <body>
-
-  <!-- Top Glass Header Bar -->
-  <header class="header-bar">
-    <div class="brand">
-      <div class="brand-logo">ش</div>
-      <div>
-        <div class="brand-title">Shikhon | <span>شيخون</span></div>
-        <div style="font-size: 11px; color: #94a3b8;">OpenAPI 3.0 REST & Storage Explorer</div>
-      </div>
-      <span class="brand-tag">PostgREST v12</span>
-    </div>
-
-    <!-- Quick Supabase Connection Inputs -->
-    <div class="config-toolbar">
-      <input type="text" id="targetUrl" placeholder="https://your-project-ref.supabase.co" />
-      <input type="password" id="anonKey" placeholder="Supabase Anon Key (apikey)" />
-      <button class="config-btn" onclick="applySupabaseConfig()">Apply to Swagger</button>
-    </div>
-  </header>
-
-  <!-- Interactive Quick Tips Card -->
-  <div class="quick-tips">
-    <h4>💡 How to Test REST Endpoints via JSON:</h4>
-    <div>
-      <strong>Step 1 (Admin Login):</strong> Execute <code>POST /auth/v1/token?grant_type=password</code> with JSON body <code>{"email": "...", "password": "..."}</code> to receive your <code>access_token</code>.<br>
-      <strong>Step 2 (Authorize):</strong> Click the green <strong>"Authorize"</strong> button at top right and paste your <code>apikey</code> and <code>Bearer &lt;access_token&gt;</code>.<br>
-      <strong>Step 3 (CRUD via JSON):</strong>
-      Use <code>GET /rest/v1/products?select=*</code> (Public Read), 
-      <code>POST /rest/v1/products</code> (Admin Create with JSON body), 
-      <code>PATCH /rest/v1/products?id=eq.{id}</code> (Admin Update with JSON body), and 
-      <code>DELETE /rest/v1/products?id=eq.{id}</code> (Admin Delete).
-    </div>
-  </div>
-
-  <!-- Swagger UI Root Container -->
   <div id="swagger-ui"></div>
 
-  <!-- Swagger UI JS Bundle -->
   <script src="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui-bundle.js"></script>
   <script src="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui-standalone-preset.js"></script>
   <script>
-    let swaggerUIInstance = null;
-
     window.onload = function() {
-      // Check stored values
-      const storedUrl = localStorage.getItem('shikhon_swagger_url') || '';
-      const storedKey = localStorage.getItem('shikhon_swagger_key') || '';
-      
-      if (storedUrl) document.getElementById('targetUrl').value = storedUrl;
-      if (storedKey) document.getElementById('anonKey').value = storedKey;
+      const ui = SwaggerUIBundle({
+        url: "./swagger.json",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        filter: true,
+        tryItOutEnabled: true,
+        requestInterceptor: (req) => {
+          // If user didn't manually set apikey in header, check localStorage
+          const savedKey = localStorage.getItem('supabase_anon_key');
+          if (savedKey && !req.headers['apikey']) {
+            req.headers['apikey'] = savedKey;
+          }
+          return req;
+        }
+      });
 
-      initSwagger(storedUrl, storedKey);
+      window.ui = ui;
     };
-
-    function initSwagger(customServerUrl, customApiKey) {
-      // Fetch swagger.json spec
-      fetch('./swagger.json')
-        .then(res => res.json())
-        .then(spec => {
-          // If custom server provided, update servers array
-          if (customServerUrl) {
-            spec.servers = [
-              { url: customServerUrl.replace(/\/+$/, ''), description: 'Active Supabase Instance' },
-              ...spec.servers
-            ];
-          }
-
-          swaggerUIInstance = SwaggerUIBundle({
-            spec: spec,
-            dom_id: '#swagger-ui',
-            deepLinking: true,
-            presets: [
-              SwaggerUIBundle.presets.apis,
-              SwaggerUIStandalonePreset
-            ],
-            plugins: [
-              SwaggerUIBundle.plugins.DownloadUrl
-            ],
-            layout: "BaseLayout",
-            requestInterceptor: (req) => {
-              const apiKey = document.getElementById('anonKey').value.trim();
-              if (apiKey && !req.headers['apikey']) {
-                req.headers['apikey'] = apiKey;
-              }
-              return req;
-            }
-          });
-
-          // Pre-populate authorization if api key available
-          if (customApiKey && swaggerUIInstance) {
-            swaggerUIInstance.preauthorizeApiKey('ApiKeyAuth', customApiKey);
-          }
-        })
-        .catch(err => {
-          console.error('Failed to load swagger.json:', err);
-        });
-    }
-
-    function applySupabaseConfig() {
-      const url = document.getElementById('targetUrl').value.trim();
-      const key = document.getElementById('anonKey').value.trim();
-      
-      localStorage.setItem('shikhon_swagger_url', url);
-      localStorage.setItem('shikhon_swagger_key', key);
-
-      initSwagger(url, key);
-      alert('Supabase credentials applied! Swagger UI has been refreshed.');
-    }
   </script>
 </body>
 </html>
