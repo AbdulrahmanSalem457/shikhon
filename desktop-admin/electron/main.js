@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 let mainWindow;
 
@@ -21,15 +22,15 @@ function createWindow() {
     titleBarStyle: 'default',
   });
 
-  // Determine URL: dev server vs production build
-  const isDev = !app.isPackaged && process.env.NODE_ENV !== 'production';
+  const indexPath = path.join(__dirname, '../dist/index.html');
 
-  if (isDev) {
-    mainWindow.loadURL('http://localhost:5174');
-    // Open DevTools in dev mode
-    // mainWindow.webContents.openDevTools();
+  // If explicit dev URL is set via env, use it, otherwise ALWAYS load local built dist/index.html
+  if (process.env.VITE_DEV_SERVER) {
+    mainWindow.loadURL(process.env.VITE_DEV_SERVER).catch(() => {
+      mainWindow.loadFile(indexPath);
+    });
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    mainWindow.loadFile(indexPath);
   }
 
   // Open external links in default OS browser
