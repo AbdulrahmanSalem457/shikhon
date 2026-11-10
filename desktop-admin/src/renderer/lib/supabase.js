@@ -29,6 +29,32 @@ export let supabase = createClient(DEFAULT_URL, DEFAULT_KEY, {
   }
 });
 
+// Real-Time Cross-Client Synchronization Channel (Broadcast + DB)
+export const realtimeSyncChannel = supabase.channel('shikhon-products-sync', {
+  config: {
+    broadcast: { ack: true }
+  }
+});
+
+realtimeSyncChannel.subscribe((status) => {
+  console.log('[Admin Realtime Sync Channel Status]:', status);
+});
+
+export const broadcastProductChange = async (event, payload) => {
+  try {
+    if (realtimeSyncChannel) {
+      await realtimeSyncChannel.send({
+        type: 'broadcast',
+        event,
+        payload,
+      });
+      console.log(`[Realtime Broadcast] Dispatched ${event}:`, payload);
+    }
+  } catch (err) {
+    console.warn('[Realtime Broadcast Error]:', err);
+  }
+};
+
 export const reinitializeSupabase = (url, anonKey) => {
   saveSupabaseConfig(url, anonKey);
   supabase = createClient(url, anonKey);

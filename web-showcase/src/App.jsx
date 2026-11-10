@@ -16,41 +16,101 @@ const MainContent = () => {
   const { isRTL } = useLanguage();
 
   // Load products via Supabase REST API (GET /rest/v1/products)
-  const loadProducts = async () => {
+  const loadProducts = async (isSilent = false) => {
     try {
-      setLoading(true);
+      if (!isSilent) setLoading(true);
       const data = await getProductsApi();
       setProducts(data || []);
       setError(null);
     } catch (err) {
       console.warn('API fetch error:', err);
-      setError(err.message);
+      if (!isSilent) setError(err.message);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadProducts();
+    // 1. Initial Load
+    loadProducts(false);
 
-    // Set up Real-Time subscription if Supabase configured
-    if (isSupabaseConfigured && supabase) {
-      const channel = supabase
-        .channel('public:products')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'products' },
-          (payload) => {
-            console.log('Realtime change received:', payload);
-            loadProducts();
+    // 2. Real-Time WebSocket Channel (Instant Broadcast + Postgres Replication)
+    const channel = supabase.channel('shikhon-products-sync', {
+      config: {
+        broadcast: { ack: true }
+      }
+    });
+
+    // Handle instant Peer Broadcast from Desktop Admin
+    channel.on('broadcast', { event: 'product_deleted' }, ({ payload }) => {
+      console.log('⚡ [Realtime Broadcast] Deleted product:', payload);
+      if (payload?.id) {
+        setProducts(prev => prev.filter(p => p.id !== payload.id));
+      }
+      loadProducts(true);
+    });
+
+    channel.on('broadcast', { event: 'product_added' }, ({ payload }) => {
+      console.log('⚡ [Realtime Broadcast] Added product:', payload);
+      if (payload?.id) {
+        setProducts(prev => [payload, ...prev.filter(p => p.id !== payload.id)]);
+      }
+      loadProducts(true);
+    });
+
+    channel.on('broadcast', { event: 'product_updated' }, ({ payload }) => {
+      console.log('⚡ [Realtime Broadcast] Updated product:', payload);
+      if (payload?.id) {
+        setProducts(prev => prev.map(p => p.id === payload.id ? payload : p));
+      }
+      loadProducts(true);
+    });
+
+    // Also listen to direct PostgreSQL database replication changes
+    channel.on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'products' },
+      (payload) => {
+        console.log('📦 [Postgres Realtime Change]:', payload);
+        if (payload.eventType === 'DELETE') {
+          const deletedId = payload.old?.id || payload.old_record?.id;
+          if (deletedId) {
+            setProducts(prev => prev.filter(p => p.id !== deletedId));
           }
-        )
-        .subscribe();
+        } else if (payload.eventType === 'INSERT' && payload.new) {
+          setProducts(prev => [payload.new, ...prev.filter(p => p.id !== payload.new.id)]);
+        } else if (payload.eventType === 'UPDATE' && payload.new) {
+          setProducts(prev => prev.map(p => p.id === payload.new.id ? payload.new : p));
+        }
+        loadProducts(true);
+      }
+    );
 
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
+    channel.subscribe((status) => {
+      console.log('[Web Showcase Realtime Sync Status]:', status);
+    });
+
+    // 3. Silent Background Sync Interval (Every 3.5 seconds)
+    const pollInterval = setInterval(() => {
+      loadProducts(true);
+    }, 3500);
+
+    // 4. Tab Visibility & Focus Sync
+    const handleSyncOnActive = () => {
+      if (document.visibilityState === 'visible') {
+        loadProducts(true);
+      }
+    };
+
+    window.addEventListener('focus', handleSyncOnActive);
+    document.addEventListener('visibilitychange', handleSyncOnActive);
+
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener('focus', handleSyncOnActive);
+      document.removeEventListener('visibilitychange', handleSyncOnActive);
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return (

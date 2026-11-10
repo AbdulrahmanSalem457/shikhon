@@ -123,3 +123,21 @@ ON storage.objects
 FOR DELETE
 TO authenticated
 USING (bucket_id = 'product-images');
+
+-- ========================================================================
+-- 7. Supabase Realtime Replication Setup
+-- ========================================================================
+-- Add products table to Supabase Realtime publication so Postgres changes
+-- are broadcasted automatically over WebSocket
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'products'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.products;
+  END IF;
+END $$;
+
+-- Set Replica Identity to FULL so DELETE payloads include all old columns
+ALTER TABLE public.products REPLICA IDENTITY FULL;

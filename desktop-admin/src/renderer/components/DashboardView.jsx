@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { supabase } from '../lib/supabase';
+import { supabase, broadcastProductChange } from '../lib/supabase';
 import { getProductsApi, deleteProductApi } from '../api/productsApi';
 import { deleteImageApi } from '../api/storageApi';
 import { AddProductModal } from './AddProductModal';
@@ -55,30 +55,37 @@ export const DashboardView = () => {
   // Product Add Callback
   const handleProductAdded = (newProduct) => {
     setProducts(prev => [newProduct, ...prev]);
+    broadcastProductChange('product_added', newProduct);
   };
 
   // Product Update Callback
   const handleProductUpdated = (updated) => {
     setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)));
+    broadcastProductChange('product_updated', updated);
   };
 
   // Product Delete Handler via DELETE /rest/v1/products API
   const confirmDelete = async () => {
     if (!deletingProduct) return;
 
+    const deletedId = deletingProduct.id;
+
     try {
       setDeleteLoading(true);
 
       // Call DELETE /rest/v1/products?id=eq.{id}
-      await deleteProductApi(deletingProduct.id);
+      await deleteProductApi(deletedId);
 
       // Call DELETE /storage/v1/object/product-images/{filename}
       if (deletingProduct.image_url) {
         await deleteImageApi(deletingProduct.image_url);
       }
 
-      setProducts(prev => prev.filter(p => p.id !== deletingProduct.id));
+      setProducts(prev => prev.filter(p => p.id !== deletedId));
       setDeletingProduct(null);
+
+      // Broadcast instant Real-Time deletion to Website Showcase
+      broadcastProductChange('product_deleted', { id: deletedId });
     } catch (err) {
       console.error('[API Delete Error]:', err);
       alert(err.message || 'Error deleting product via API');
