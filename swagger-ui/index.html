@@ -10,7 +10,6 @@
   <style>
     html {
       box-sizing: border-box;
-      overflow: -moz-scrollbars-vertical;
       overflow-y: scroll;
     }
     *, *:before, *:after {
@@ -18,19 +17,49 @@
     }
     body {
       margin: 0;
-      background: #fafafa;
+      background: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     .topbar {
-      background-color: #1b1b1b !important;
+      background-color: #0f172a !important;
+      border-bottom: 2px solid #0284c7;
+    }
+    .auth-banner {
+      background: linear-gradient(90deg, #0284c7, #0ea5e9);
+      color: #ffffff;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .auth-banner code {
+      background: rgba(0,0,0,0.25);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 11px;
     }
   </style>
 </head>
 <body>
+  <div class="auth-banner">
+    <div>
+      <span>⚡ تم تفعيل مفتاح الربط تلقائياً (Auto-Authenticated): </span>
+      <code>sb_publishable_xSR0yiIJFDYy47qtibxLNA_EQlfuLdv</code>
+    </div>
+    <span style="font-size: 11px; opacity: 0.9;">Ready for instant testing (Try it out)</span>
+  </div>
+
   <div id="swagger-ui"></div>
 
   <script src="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui-bundle.js"></script>
   <script src="https://unpkg.com/swagger-ui-dist@5.18.2/swagger-ui-standalone-preset.js"></script>
   <script>
+    const DEFAULT_API_KEY = "sb_publishable_xSR0yiIJFDYy47qtibxLNA_EQlfuLdv";
+
     window.onload = function() {
       const ui = SwaggerUIBundle({
         url: "./swagger.json?t=" + new Date().getTime(),
@@ -47,14 +76,25 @@
         filter: true,
         tryItOutEnabled: true,
         requestInterceptor: (req) => {
-          // If user didn't manually set apikey in header, check localStorage
-          const savedKey = localStorage.getItem('supabase_anon_key');
-          if (savedKey && !req.headers['apikey']) {
-            req.headers['apikey'] = savedKey;
+          // Automatically inject Supabase apikey into EVERY outgoing request
+          const keyToUse = req.headers['apikey'] || localStorage.getItem('supabase_anon_key') || DEFAULT_API_KEY;
+          req.headers['apikey'] = keyToUse;
+          
+          if (!req.headers['Authorization']) {
+            req.headers['Authorization'] = 'Bearer ' + keyToUse;
           }
           return req;
         }
       });
+
+      // Pre-authorize ApiKeyAuth so Swagger UI displays authorized by default
+      setTimeout(() => {
+        try {
+          ui.preauthorizeApiKey("ApiKeyAuth", DEFAULT_API_KEY);
+        } catch (e) {
+          console.warn('Preauthorize:', e);
+        }
+      }, 500);
 
       window.ui = ui;
     };
