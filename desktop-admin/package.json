@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "electron": "concurrently \"vite --port 5174\" \"wait-on tcp:5174 && electron .\"",
     "electron:start": "electron .",
-    "package:win": "vite build && electron-packager . \"Shikhon Admin\" --platform=win32 --arch=x64 --out=dist-package --icon=build/icon.ico --overwrite"
+    "package:win": "vite build && electron-packager . \"Shikhon Admin\" --platform=win32 --arch=x64 --out=dist-package --icon=build/shikhon_brand_icon.ico --overwrite"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",

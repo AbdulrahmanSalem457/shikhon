@@ -5,7 +5,10 @@ const fs = require('fs');
 let mainWindow;
 
 function createWindow() {
-  const iconPath = path.join(__dirname, 'icon.ico');
+  const iconPath = path.join(__dirname, 'shikhon_brand_icon.ico');
+  const fallbackIcon = path.join(__dirname, 'icon.ico');
+  const chosenIcon = fs.existsSync(iconPath) ? iconPath : (fs.existsSync(fallbackIcon) ? fallbackIcon : undefined);
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 850,
@@ -13,7 +16,7 @@ function createWindow() {
     minHeight: 700,
     backgroundColor: '#070b14',
     title: 'Shikhon Admin | شيخون لوحة التحكم',
-    icon: fs.existsSync(iconPath) ? iconPath : undefined,
+    icon: chosenIcon,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
