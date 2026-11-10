@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { uploadImageApi } from '../api/storageApi';
 import { updateProductApi } from '../api/productsApi';
@@ -28,6 +28,20 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
   const [imagePreview, setImagePreview] = useState(product?.image_url || '');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Sync state whenever selected product changes or modal opens
+  useEffect(() => {
+    if (product) {
+      setNameAr(product.name_ar || '');
+      setNameEn(product.name_en || '');
+      setCategory(product.category || 'Brakes');
+      setPartNumber(product.part_number || '');
+      setPrice(product.price !== null && product.price !== undefined ? product.price : '');
+      setImagePreview(product.image_url || '');
+      setImageFile(null);
+      setErrorMessage('');
+    }
+  }, [product, isOpen]);
 
   if (!isOpen || !product) return null;
 

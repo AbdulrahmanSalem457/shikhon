@@ -383,12 +383,14 @@ export const DashboardView = () => {
       )}
 
       {/* Add Product Modal */}
-      <AddProductModal
-        isOpen={isAddOpen}
-        onClose={() => setIsAddOpen(false)}
-        onProductAdded={handleProductAdded}
-        isDemo={isDemoUser}
-      />
+      {isAddOpen && (
+        <AddProductModal
+          isOpen={isAddOpen}
+          onClose={() => setIsAddOpen(false)}
+          onProductAdded={handleProductAdded}
+          isDemo={isDemoUser}
+        />
+      )}
 
       {/* Edit Product Modal */}
       {editingProduct && (
