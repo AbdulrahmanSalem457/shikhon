@@ -120,18 +120,7 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
           </p>
         </motion.div>
       ) : (
-        <motion.div 
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.06 }
-            }
-          }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
           {filteredProducts.map((product, idx) => {
             const displayName = language === 'ar' ? product.name_ar : product.name_en;
             const secondaryName = language === 'ar' ? product.name_en : product.name_ar;
@@ -146,15 +135,9 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
             return (
               <motion.div
                 key={product.id || idx}
-                variants={{
-                  hidden: { opacity: 0, y: 30, scale: 0.94 },
-                  visible: { 
-                    opacity: 1, 
-                    y: 0, 
-                    scale: 1,
-                    transition: { type: "spring", stiffness: 260, damping: 20 }
-                  }
-                }}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
                 className="liquid-glass-card p-4 flex flex-col justify-between group cursor-default"
               >
                 {/* Specular glare reflection on each card */}
@@ -234,7 +217,7 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       )}
 
       {/* Product Detail Modal */}

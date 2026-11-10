@@ -291,26 +291,17 @@ export const DashboardView = () => {
         </motion.div>
       ) : viewMode === 'grid' ? (
         /* GRID VIEW with Liquid Glass Cards */
-        <motion.div 
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
-          }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10"
-        >
-          {filteredProducts.map((product) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
+          {filteredProducts.map((product, idx) => {
             const displayName = language === 'ar' ? product.name_ar : product.name_en;
             const subName = language === 'ar' ? product.name_en : product.name_ar;
 
             return (
               <motion.div
-                key={product.id}
-                variants={{
-                  hidden: { opacity: 0, y: 25, scale: 0.95 },
-                  visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 280, damping: 20 } }
-                }}
+                key={product.id || idx}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
                 className="liquid-glass-card p-4 flex flex-col justify-between group"
               >
                 <div className="specular-glare opacity-25 pointer-events-none" />
@@ -373,7 +364,7 @@ export const DashboardView = () => {
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       ) : (
         /* TABLE VIEW with Liquid Glass Container */
         <motion.div 
