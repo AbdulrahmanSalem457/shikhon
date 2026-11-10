@@ -114,10 +114,10 @@ const MainContent = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between ${isRTL ? 'font-ar' : 'font-en'}`}>
-      <div>
+    <div className={`min-h-screen flex flex-col justify-between w-full max-w-full overflow-x-hidden ${isRTL ? 'font-ar' : 'font-en'}`}>
+      <div className="w-full max-w-full overflow-x-hidden">
         <Navbar />
-        <main>
+        <main className="w-full max-w-full overflow-x-hidden">
           <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <ProductCatalog 
             products={products} 

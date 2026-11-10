@@ -111,8 +111,10 @@ export const DashboardView = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 relative overflow-hidden">
       
       {/* Background Liquid Water Blobs */}
-      <div className="liquid-blob w-[450px] h-[450px] -top-20 -right-20 bg-orange-400/10 pointer-events-none" />
-      <div className="liquid-blob w-[400px] h-[400px] top-1/2 -left-32 bg-slate-300/20 pointer-events-none" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="liquid-blob w-[450px] h-[450px] -top-20 -right-20 bg-orange-400/10 pointer-events-none" />
+        <div className="liquid-blob w-[400px] h-[400px] top-1/2 -left-32 bg-slate-300/20 pointer-events-none" />
+      </div>
 
       {/* KPI Stats Bar with Liquid Glass Physics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8 relative z-10">

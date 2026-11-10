@@ -61,14 +61,16 @@ export const LoginView = () => {
     <div className="min-h-[calc(100vh-65px)] flex items-center justify-center p-4 relative overflow-hidden bg-[#F8FAFC]">
       
       {/* 2 Dynamic Fluid Water Blobs */}
-      <div 
-        className="liquid-blob w-[500px] h-[500px] top-1/4 left-1/3 bg-gradient-to-tr from-orange-400/20 via-amber-200/15 to-transparent" 
-        style={{ animationDuration: '18s' }}
-      />
-      <div 
-        className="liquid-blob w-[450px] h-[450px] bottom-10 right-1/4 bg-gradient-to-br from-slate-300/25 to-orange-300/10" 
-        style={{ animationDuration: '22s', animationDelay: '-5s' }}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div 
+          className="liquid-blob w-[500px] h-[500px] top-1/4 left-1/3 bg-gradient-to-tr from-orange-400/20 via-amber-200/15 to-transparent" 
+          style={{ animationDuration: '18s' }}
+        />
+        <div 
+          className="liquid-blob w-[450px] h-[450px] bottom-10 right-1/4 bg-gradient-to-br from-slate-300/25 to-orange-300/10" 
+          style={{ animationDuration: '22s', animationDelay: '-5s' }}
+        />
+      </div>
 
       <motion.div 
         initial={{ opacity: 0, y: 25, scale: 0.96 }}
