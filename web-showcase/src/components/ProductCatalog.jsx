@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { normalizeImageUrl } from '../lib/imageUtils';
 import { ProductModal } from './ProductModal';
 import { Eye, MessageCircle, AlertCircle, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -127,7 +128,7 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
                 <div className="p-3.5 pb-0 flex items-center justify-center w-full">
                   <div className="w-full h-44 rounded-xl bg-slate-50 dark:bg-[#090D16] border border-slate-100 dark:border-[#1E293B] p-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
                     <img
-                      src={product.image_url}
+                      src={normalizeImageUrl(product.image_url)}
                       alt={displayName}
                       loading="lazy"
                       className="w-full h-full object-contain filter drop-shadow-sm transform transition-transform duration-300 group-hover:scale-105"

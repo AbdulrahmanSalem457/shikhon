@@ -30,10 +30,10 @@ export const Hero = ({ searchQuery, setSearchQuery }) => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.25] text-[#0F172A] dark:text-[#F8FAFC] max-w-3xl mx-auto break-words"
+          className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-normal sm:leading-[1.35] lg:leading-[1.4] text-[#0F172A] dark:text-[#F8FAFC] max-w-3xl mx-auto break-words overflow-visible"
         >
-          <span>{t('hero.titlePrefix')} </span>
-          <span className="bg-gradient-to-r from-[#F97316] via-[#EA580C] to-[#C2410C] bg-clip-text text-transparent inline-block">
+          <span className="inline-block py-1">{t('hero.titlePrefix')} </span>
+          <span className="bg-gradient-to-r from-[#F97316] via-[#EA580C] to-[#C2410C] bg-clip-text text-transparent inline-block py-1 pb-3 px-1">
             {t('hero.titleHighlight')}
           </span>
         </motion.h1>

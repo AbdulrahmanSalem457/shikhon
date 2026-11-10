@@ -3,7 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { supabase, broadcastProductChange } from '../lib/supabase';
 import { getProductsApi, deleteProductApi } from '../api/productsApi';
-import { deleteImageApi } from '../api/storageApi';
+import { deleteImageApi, normalizeImageUrl } from '../api/storageApi';
 import { AddProductModal } from './AddProductModal';
 import { EditProductModal } from './EditProductModal';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
@@ -267,7 +267,7 @@ export const DashboardView = () => {
                 {/* Image */}
                 <div className="w-full h-40 rounded-2xl bg-[#F8FAFC] dark:bg-[#090D16] p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-slate-100 dark:border-[#1E293B]">
                   <img
-                    src={product.image_url}
+                    src={normalizeImageUrl(product.image_url)}
                     alt={displayName}
                     className="w-full h-full object-contain filter drop-shadow-sm"
                   />
@@ -338,7 +338,7 @@ export const DashboardView = () => {
                   <tr key={product.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="p-4">
                       <img
-                        src={product.image_url}
+                        src={normalizeImageUrl(product.image_url)}
                         alt=""
                         className="w-12 h-12 object-contain rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] p-1 border border-slate-200 dark:border-[#1E293B]"
                       />

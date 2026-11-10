@@ -136,9 +136,8 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
       // 1. Upload Image to Supabase Storage Bucket via API
       if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-        finalImageUrl = await uploadImageApi(imageFile, fileName);
+        const uploadRes = await uploadImageApi(imageFile);
+        finalImageUrl = typeof uploadRes === 'string' ? uploadRes : (uploadRes?.publicUrl || uploadRes);
       }
 
       // 2. Insert Product into PostgreSQL database via API

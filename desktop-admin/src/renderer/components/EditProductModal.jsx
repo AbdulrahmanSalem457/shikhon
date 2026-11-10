@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { uploadImageApi } from '../api/storageApi';
+import { uploadImageApi, normalizeImageUrl } from '../api/storageApi';
 import { updateProductApi } from '../api/productsApi';
 import { X, UploadCloud, Check, AlertCircle, ArrowLeftRight, Loader2 } from 'lucide-react';
 
@@ -37,7 +37,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
       setCategory(product.category || 'Brakes');
       setPartNumber(product.part_number || '');
       setPrice(product.price !== null && product.price !== undefined ? product.price : '');
-      setImagePreview(product.image_url || '');
+      setImagePreview(normalizeImageUrl(product.image_url) || '');
       setImageFile(null);
       setErrorMessage('');
     }
@@ -72,7 +72,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
       // If user selected a new image file, upload via Storage API
       if (imageFile) {
         const uploadRes = await uploadImageApi(imageFile);
-        updatedImageUrl = uploadRes.publicUrl;
+        updatedImageUrl = typeof uploadRes === 'string' ? uploadRes : (uploadRes?.publicUrl || uploadRes);
       }
 
       const updatedFields = {

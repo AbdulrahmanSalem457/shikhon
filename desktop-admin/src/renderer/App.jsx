@@ -12,10 +12,10 @@ const MainApp = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center text-[#0F172A]">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#090D16] flex items-center justify-center text-[#0F172A] dark:text-[#F8FAFC]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-2 border-[#F97316] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs text-[#64748B] font-semibold tracking-wider">
+          <span className="text-xs text-[#64748B] dark:text-[#94A3B8] font-semibold tracking-wider">
             Loading Shikhon Admin...
           </span>
         </div>
@@ -24,9 +24,9 @@ const MainApp = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-orange-500/20 selection:text-orange-900 ${isRTL ? 'font-ar' : 'font-en'}`}>
+    <div className={`min-h-screen bg-[#F8FAFC] dark:bg-[#090D16] text-[#0F172A] dark:text-[#F8FAFC] selection:bg-orange-500/20 selection:text-orange-900 transition-colors duration-200 ${isRTL ? 'font-ar' : 'font-en'}`}>
       <AdminNavbar />
-      <main>
+      <main className="w-full bg-[#F8FAFC] dark:bg-[#090D16]">
         {isAuthenticated ? <DashboardView /> : <LoginView />}
       </main>
     </div>

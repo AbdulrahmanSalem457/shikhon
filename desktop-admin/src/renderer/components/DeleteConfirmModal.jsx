@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { normalizeImageUrl } from '../api/storageApi';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
 
 export const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, product, loading }) => {
@@ -33,7 +34,7 @@ export const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, product, loadin
 
         <div className="p-3 rounded-2xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-200 dark:border-[#1E293B] mb-6 flex items-center gap-3">
           <img
-            src={product.image_url}
+            src={normalizeImageUrl(product.image_url)}
             alt={displayName}
             className="w-12 h-12 rounded-xl object-contain bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E293B] p-1"
           />

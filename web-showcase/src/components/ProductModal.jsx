@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { normalizeImageUrl } from '../lib/imageUtils';
 import { X, Check, Copy, MessageCircle, Phone, Tag, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -59,7 +60,7 @@ export const ProductModal = ({ product, isOpen, onClose }) => {
             {/* Image Preview Area */}
             <div className="relative bg-slate-50 dark:bg-[#090D16] p-8 flex items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-slate-200 dark:border-[#1E293B]">
               <img
-                src={product.image_url}
+                src={normalizeImageUrl(product.image_url)}
                 alt={displayName}
                 className="w-full h-auto max-h-[300px] object-contain rounded-2xl filter drop-shadow-md"
               />
