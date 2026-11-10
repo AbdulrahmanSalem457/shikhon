@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Shikhon (شيخون) Auto Spare Parts API",
-    "description": "REST API for Shikhon (شيخون) car spare parts catalog. Authenticate with Supabase Auth (obtain JWT access token from `/auth/v1/token?grant_type=password`) and click 'Authorize' using `apikey` and `Bearer <token>`.",
-    "version": "v1",
+    "description": "Comprehensive REST API documentation for the Shikhon automotive spare parts platform. Includes PostgREST product endpoints, Supabase Storage for direct image management, and Supabase Auth for admin authentication.",
+    "version": "v1.1",
     "contact": {
       "name": "Shikhon Platform Engineering",
       "email": "support@shikhon.com"
@@ -31,7 +31,7 @@
     "/auth/v1/token?grant_type=password": {
       "post": {
         "tags": ["Authentication"],
-        "summary": "Log in (obtain JWT access token)",
+        "summary": "1. Log in admin (obtain JWT access token)",
         "operationId": "auth_login_post",
         "security": [
           {
@@ -69,10 +69,44 @@
         }
       }
     },
+    "/auth/v1/signup": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "2. Register new admin account (Sign up)",
+        "operationId": "auth_signup_post",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginRequest"
+              },
+              "example": {
+                "email": "newadmin@shikhon-parts.com",
+                "password": "StrongPassword123!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Registration error"
+          }
+        }
+      }
+    },
     "/auth/v1/user": {
       "get": {
         "tags": ["Authentication"],
-        "summary": "Get current admin user profile",
+        "summary": "3. Get current admin user profile",
         "operationId": "auth_user_read",
         "security": [
           {
@@ -92,14 +126,15 @@
     },
     "/rest/v1/products": {
       "get": {
-        "tags": ["Products"],
-        "summary": "Fetch all car spare parts (Public)",
+        "tags": ["Products (Catalog & Admin)"],
+        "summary": "4. Fetch all car spare parts (Public & Dashboard)",
+        "description": "Retrieves spare parts catalog ordered by creation date. Used by the Web Showcase and Desktop Dashboard.",
         "operationId": "products_list",
         "parameters": [
           {
             "name": "select",
             "in": "query",
-            "description": "Columns to select",
+            "description": "Columns to select (* for all)",
             "required": false,
             "schema": {
               "type": "string",
@@ -123,13 +158,13 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 20
+              "default": 50
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "List of spare parts",
+            "description": "List of spare parts returned as JSON array",
             "content": {
               "application/json": {
                 "schema": {
@@ -144,13 +179,13 @@
         }
       },
       "post": {
-        "tags": ["Products"],
-        "summary": "Create new spare part (Admin Only)",
+        "tags": ["Products (Catalog & Admin)"],
+        "summary": "5. Create new spare part (POST)",
+        "description": "Inserts a new spare part record into the products table.",
         "operationId": "products_create",
         "security": [
           {
-            "ApiKeyAuth": [],
-            "BearerAuth": []
+            "ApiKeyAuth": []
           }
         ],
         "parameters": [
@@ -172,12 +207,12 @@
                 "$ref": "#/components/schemas/CreateProductRequest"
               },
               "example": {
-                "name_ar": "طقم أقراص فرامل سيراميك بريمبو",
-                "name_en": "Brembo Ceramic Brake Discs Kit",
-                "image_url": "https://ugmtruurtlyieptuzhar.supabase.co/storage/v1/object/public/product-images/parts/brembo.jpg",
-                "category": "Brakes",
-                "part_number": "BRM-9942-X",
-                "price": 249.99,
+                "name_ar": "سير دينامو أصلي",
+                "name_en": "Genuine Alternator Belt",
+                "image_url": "https://ugmtruurtlyieptuzhar.supabase.co/storage/v1/object/public/product-images/belt.jpg",
+                "category": "Engine",
+                "part_number": "ENG-BLT-900",
+                "price": 35.0,
                 "in_stock": true
               }
             }
@@ -202,13 +237,12 @@
     },
     "/rest/v1/products?id=eq.{id}": {
       "patch": {
-        "tags": ["Products"],
-        "summary": "Update spare part details by ID (Admin Only)",
+        "tags": ["Products (Catalog & Admin)"],
+        "summary": "6. Update spare part details by ID (PATCH)",
         "operationId": "products_partial_update",
         "security": [
           {
-            "ApiKeyAuth": [],
-            "BearerAuth": []
+            "ApiKeyAuth": []
           }
         ],
         "parameters": [
@@ -220,7 +254,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+            "example": "59bfb783-b682-40f7-a586-7b21310eb2bc"
           },
           {
             "name": "Prefer",
@@ -239,8 +273,8 @@
                 "$ref": "#/components/schemas/UpdateProductRequest"
               },
               "example": {
-                "name_ar": "طقم أقراص فرامل سيراميك بريمبو - إصدار معدل",
-                "price": 279.00
+                "name_ar": "سير دينامو أصلي - نسخة معدلة",
+                "price": 38.5
               }
             }
           }
@@ -255,13 +289,12 @@
         }
       },
       "delete": {
-        "tags": ["Products"],
-        "summary": "Delete spare part by ID (Admin Only)",
+        "tags": ["Products (Catalog & Admin)"],
+        "summary": "7. Delete spare part by ID (DELETE)",
         "operationId": "products_delete",
         "security": [
           {
-            "ApiKeyAuth": [],
-            "BearerAuth": []
+            "ApiKeyAuth": []
           }
         ],
         "parameters": [
@@ -273,12 +306,15 @@
               "type": "string",
               "format": "uuid"
             },
-            "example": "e7b0a7cb-77b3-4f9e-a0bf-650e41bf10d1"
+            "example": "59bfb783-b682-40f7-a586-7b21310eb2bc"
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "Product deleted successfully"
+          },
+          "204": {
+            "description": "Deleted with no content"
           },
           "401": {
             "description": "Unauthorized"
@@ -286,25 +322,119 @@
         }
       }
     },
-    "/storage/v1/object/public/product-images/{wildcard}": {
-      "get": {
-        "tags": ["Storage"],
-        "summary": "View / Download public spare part image",
-        "operationId": "storage_get_public_image",
+    "/storage/v1/object/product-images/{filename}": {
+      "post": {
+        "tags": ["Storage (Image Management)"],
+        "summary": "8. Upload spare part image (POST binary)",
+        "description": "Direct upload to the public bucket 'product-images'. Header x-upsert: true overwrites existing file.",
+        "operationId": "storage_upload_image",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
-            "name": "wildcard",
+            "name": "filename",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "example": "parts/brembo.jpg"
+            "example": "brake-disc.jpg"
+          },
+          {
+            "name": "x-upsert",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "image/webp": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Image uploaded successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "Key": "product-images/brake-disc.jpg",
+                  "Id": "2cfdbf1f-81c0-4eea-8f29-19cc4d9f213a"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Storage (Image Management)"],
+        "summary": "9. Delete spare part image from storage (DELETE)",
+        "operationId": "storage_delete_image",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "brake-disc.jpg"
           }
         ],
         "responses": {
           "200": {
-            "description": "Image binary"
+            "description": "Image deleted successfully"
+          }
+        }
+      }
+    },
+    "/storage/v1/object/public/product-images/{filename}": {
+      "get": {
+        "tags": ["Storage (Image Management)"],
+        "summary": "10. View / Download public image CDN URL (GET)",
+        "operationId": "storage_get_public_image",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "brake-disc.jpg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image binary returned"
           }
         }
       }
