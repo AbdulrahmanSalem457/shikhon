@@ -1,15 +1,17 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { BrandLogo } from './BrandLogo';
-import { Globe, LogOut } from 'lucide-react';
+import { Globe, LogOut, Sun, Moon } from 'lucide-react';
 
 export const AdminNavbar = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const { user, logout, isDemoUser } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-40 px-4 sm:px-6 py-3 bg-[#0F172A] border-b border-slate-800 text-white shadow-md">
+    <header className="sticky top-0 z-40 px-4 sm:px-6 py-3 bg-[#0F172A] dark:bg-[#090D16] border-b border-slate-800 dark:border-[#1E293B] text-white shadow-md transition-colors">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
         {/* Brand Info with BrandLogo */}
@@ -40,6 +42,20 @@ export const AdminNavbar = () => {
         {/* Right Controls */}
         <div className="flex items-center gap-2.5">
 
+          {/* Dark / Light Mode Switcher */}
+          <button
+            onClick={toggleTheme}
+            aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            title={isDark ? (language === 'ar' ? 'تفعيل الوضع النهاري' : 'Switch to Light Mode') : (language === 'ar' ? 'تفعيل الوضع الداكن' : 'Switch to Dark Mode')}
+            className="p-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white hover:border-orange-500/50 cursor-pointer transition-all shrink-0"
+          >
+            {isDark ? (
+              <Sun className="w-4 h-4 text-[#F97316] transition-transform duration-300 rotate-0 hover:rotate-45" />
+            ) : (
+              <Moon className="w-4 h-4 text-slate-300 hover:text-[#F97316] transition-transform duration-300" />
+            )}
+          </button>
+
           {/* Language Switcher Pill */}
           <button
             onClick={toggleLanguage}
@@ -60,7 +76,7 @@ export const AdminNavbar = () => {
 
           {/* User info & Sign out */}
           {user && (
-            <div className="flex items-center gap-2 ps-2 border-s border-slate-800">
+            <div className="flex items-center gap-2 ps-2 border-s border-slate-800 dark:border-slate-700">
               <span className="text-xs text-slate-300 font-medium hidden md:block max-w-[160px] truncate">
                 {user.email}
               </span>

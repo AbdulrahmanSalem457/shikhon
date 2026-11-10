@@ -1,13 +1,13 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { BrandLogo } from './BrandLogo';
-import { ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export const Footer = () => {
   const { t, language } = useLanguage();
 
   return (
-    <footer id="about" className="relative mt-20 sm:mt-24 bg-[#0F172A] border-t border-slate-800 pt-12 sm:pt-16 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8 text-white w-full max-w-full overflow-hidden">
+    <footer id="about" className="relative mt-20 sm:mt-24 bg-[#0F172A] dark:bg-[#090D16] border-t border-slate-800 dark:border-[#1E293B] pt-12 sm:pt-16 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8 text-white w-full max-w-full overflow-hidden transition-colors">
       
       {/* Subtle Warm Amber/Orange Ambient Glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 max-w-full h-48 bg-orange-500/5 blur-[120px] pointer-events-none -z-10" />
@@ -30,7 +30,7 @@ export const Footer = () => {
             </p>
 
             {/* Quality & Trust Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 dark:bg-[#111827] border border-slate-800 dark:border-[#1E293B] text-slate-300">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#F97316] shrink-0" />
               <span>
                 {language === 'ar' ? 'قطع غيار معتمدة 100% وأصلية' : '100% Certified OEM Quality'}
@@ -67,7 +67,7 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Copyright Bar */}
-        <div className="pt-6 sm:pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
+        <div className="pt-6 sm:pt-8 border-t border-slate-800/80 dark:border-[#1E293B] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
           <div className="flex items-center gap-2">
             <span>© {new Date().getFullYear()} شيخون (Shikhon).</span>
             <span>{t('footer.allRightsReserved')}</span>

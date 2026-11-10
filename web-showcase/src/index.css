@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    color-scheme: light;
+    color-scheme: light dark;
   }
 
   html[lang="ar"] {
@@ -20,28 +20,50 @@
     color: #0F172A;
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Dark Mode Body (#090D16 Deep Carbon Navy) */
+  html.dark body {
+    background-color: #090D16;
+    color: #F8FAFC;
   }
 }
 
-/* Shikhon Brand Color System (Midnight Navy + Vibrant Orange + Metallic Slate + Snow White) */
+/* Shikhon Brand Color System:
+   Light Mode: Midnight Navy (#0F172A) + Vibrant Orange (#F97316) + Metallic Slate (#64748B) + Snow White (#FFFFFF/#F8FAFC)
+   Dark Mode: Deep Carbon Navy (#090D16) + Card Carbon (#111827) + Vibrant Orange (#F97316/#FB923C) + Metallic Slate (#94A3B8/#1E293B) + Soft Ice White (#F8FAFC)
+*/
 @layer components {
-  /* Header & Navigation Bar (Midnight Navy #0F172A) */
+  /* Header & Navigation Bar */
   .header-midnight {
     background-color: #0F172A;
     border-bottom: 1px solid #1E293B;
     color: #FFFFFF;
   }
 
-  /* Footer (Midnight Navy #0F172A) */
+  html.dark .header-midnight {
+    background-color: #090D16;
+    border-bottom: 1px solid #1E293B;
+    color: #FFFFFF;
+  }
+
+  /* Footer */
   .footer-midnight {
     background-color: #0F172A;
     border-top: 1px solid #1E293B;
     color: #F8FAFC;
   }
 
-  /* Translucent Floating White Panel */
+  html.dark .footer-midnight {
+    background-color: #090D16;
+    border-top: 1px solid #1E293B;
+    color: #F8FAFC;
+  }
+
+  /* Translucent Floating White Panel (#FFFFFF in light, #111827 in dark) */
   .liquid-glass {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid #E2E8F0;
@@ -50,13 +72,27 @@
       0 4px 10px -2px rgba(15, 23, 42, 0.02);
   }
 
-  /* Product Cards (#FFFFFF with Metallic Slate Border & Orange Glow on Hover) */
+  html.dark .liquid-glass {
+    background: rgba(17, 24, 39, 0.95);
+    border: 1px solid #1E293B;
+    box-shadow: 
+      0 10px 25px -5px rgba(0, 0, 0, 0.4),
+      0 4px 10px -2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Product Cards (#FFFFFF with Metallic Slate Border & Orange Glow on Hover in light, #111827 with #1E293B Border in dark) */
   .liquid-glass-card {
     position: relative;
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
     box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.dark .liquid-glass-card {
+    background: #111827;
+    border: 1px solid #1E293B;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4);
   }
 
   .liquid-glass-card:hover {
@@ -67,7 +103,14 @@
       0 0 1px rgba(249, 115, 22, 0.4);
   }
 
-  /* Primary Action Button (Vibrant Orange #F97316) */
+  html.dark .liquid-glass-card:hover {
+    border-color: #FB923C;
+    box-shadow: 
+      0 18px 36px -8px rgba(249, 115, 22, 0.28),
+      0 0 1px rgba(251, 146, 60, 0.5);
+  }
+
+  /* Primary Action Button (Vibrant Orange #F97316 / #FB923C) */
   .btn-accent {
     background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
     color: #FFFFFF;
@@ -91,7 +134,14 @@
     transition: all 0.2s ease;
   }
 
-  /* Form Inputs (#FFFFFF with Metallic Slate Border #CBD5E1) */
+  html.dark .liquid-pill {
+    background: #111827;
+    border: 1px solid #1E293B;
+    color: #F8FAFC;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Form Inputs (#FFFFFF with Metallic Slate Border #CBD5E1 in light, #111827 with #1E293B in dark) */
   .glass-input {
     background: #FFFFFF;
     border: 1px solid #CBD5E1;
@@ -99,10 +149,21 @@
     transition: all 0.2s ease;
   }
 
+  html.dark .glass-input {
+    background: #111827;
+    border: 1px solid #1E293B;
+    color: #F8FAFC;
+  }
+
   .glass-input:focus {
     border-color: #F97316;
     box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     outline: none;
+  }
+
+  html.dark .glass-input:focus {
+    border-color: #FB923C;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25);
   }
 
   .specular-glare {
@@ -116,9 +177,13 @@
     border-top-right-radius: inherit;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
   }
+
+  html.dark .specular-glare {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  }
 }
 
-/* Custom Scrollbar (Metallic Slate #94A3B8) */
+/* Custom Scrollbar (Metallic Slate #94A3B8 in light, #1E293B / #64748B in dark) */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -128,11 +193,23 @@
   background: #F1F5F9;
 }
 
+html.dark ::-webkit-scrollbar-track {
+  background: #090D16;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #94A3B8;
   border-radius: 9999px;
 }
 
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1E293B;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #64748B;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }

@@ -97,22 +97,22 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-[#1E293B] my-8 transition-colors">
         
         <button
           onClick={onClose}
-          className="absolute top-5 end-5 p-1.5 rounded-full bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 cursor-pointer transition-colors"
+          className="absolute top-5 end-5 p-1.5 rounded-full bg-[#F8FAFC] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-xl font-black text-[#0F172A] mb-4">
+        <h2 className="text-xl font-black text-[#0F172A] dark:text-[#F8FAFC] mb-4">
           {t('form.editTitle')}
         </h2>
 
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
@@ -120,20 +120,20 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Image & preview */}
-          <div className="flex items-center gap-4 p-3 rounded-2xl bg-[#F8FAFC] border border-slate-200">
+          <div className="flex items-center gap-4 p-3 rounded-2xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-200 dark:border-[#1E293B]">
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-20 h-20 object-contain rounded-xl bg-white border border-slate-200 p-1"
+              className="w-20 h-20 object-contain rounded-xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E293B] p-1"
             />
             <div className="flex-1">
-              <span className="text-xs font-semibold text-[#0F172A] block mb-1">
+              <span className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1">
                 {t('form.replaceImageText')}
               </span>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-[#0F172A] hover:border-[#F97316] hover:text-[#F97316] text-xs font-medium cursor-pointer transition-colors"
+                className="px-3 py-1.5 rounded-xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] hover:border-[#F97316] dark:hover:border-[#FB923C] hover:text-[#F97316] dark:hover:text-[#FB923C] text-xs font-medium cursor-pointer transition-colors"
               >
                 تغيير الصورة
               </button>
@@ -151,7 +151,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-[#0F172A]">
+                <label className="text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC]">
                   {t('form.nameArLabel')}
                 </label>
                 <button
@@ -168,13 +168,13 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 dir="rtl"
                 value={nameAr}
                 onChange={(e) => setNameAr(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] font-medium focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-[#0F172A]">
+                <label className="text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC]">
                   {t('form.nameEnLabel')}
                 </label>
                 <button
@@ -191,7 +191,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 dir="ltr"
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] font-medium focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               />
             </div>
           </div>
@@ -199,13 +199,13 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
           {/* Category, Part No, Price */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
                 {t('form.categoryLabel')}
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               >
                 {CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>
@@ -216,19 +216,19 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
                 {t('form.partNumberLabel')}
               </label>
               <input
                 type="text"
                 value={partNumber}
                 onChange={(e) => setPartNumber(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs font-mono text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs font-mono text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
                 {t('form.priceLabel')}
               </label>
               <input
@@ -236,7 +236,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 step="0.01"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               />
             </div>
           </div>
@@ -247,14 +247,14 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 text-xs font-semibold cursor-pointer transition-colors"
+              className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold cursor-pointer transition-colors"
             >
               {t('form.cancelBtn')}
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-orange-500/25 cursor-pointer transition-all"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#FB923C] hover:to-[#EA580C] text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-orange-500/25 cursor-pointer transition-all"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
               <span>{t('form.updateBtn')}</span>

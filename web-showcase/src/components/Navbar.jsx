@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { BrandLogo } from './BrandLogo';
-import { Globe } from 'lucide-react';
+import { Globe, Sun, Moon } from 'lucide-react';
 
 export const Navbar = () => {
   const { language, toggleLanguage, t } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-2.5 sm:px-6 lg:px-8 pt-2.5 sm:pt-4 transition-all duration-300 w-full max-w-full">
       <nav 
-        className={`w-full max-w-6xl mx-auto rounded-2xl px-3 sm:px-5 py-2.5 sm:py-3 transition-all duration-300 bg-[#0F172A] border border-slate-800 text-white ${
+        className={`w-full max-w-6xl mx-auto rounded-2xl px-3 sm:px-5 py-2.5 sm:py-3 transition-all duration-300 bg-[#0F172A] dark:bg-[#090D16]/95 dark:backdrop-blur-md border border-slate-800 dark:border-[#1E293B] text-white ${
           scrolled 
             ? 'shadow-xl shadow-slate-950/20 border-slate-700' 
             : 'shadow-md shadow-slate-950/10'
@@ -69,9 +71,23 @@ export const Navbar = () => {
             </a>
           </div>
 
-          {/* Right Action Controls: AR/EN Language Pill */}
+          {/* Right Action Controls: Theme Switcher + AR/EN Language Pill */}
           <div className="flex items-center gap-2 shrink-0">
             
+            {/* Dark / Light Mode Switcher */}
+            <button
+              onClick={toggleTheme}
+              aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={isDark ? (language === 'ar' ? 'تفعيل الوضع النهاري' : 'Switch to Light Mode') : (language === 'ar' ? 'تفعيل الوضع الداكن' : 'Switch to Dark Mode')}
+              className="p-1.5 sm:p-2 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white hover:border-orange-500/50 cursor-pointer transition-all duration-200 shrink-0"
+            >
+              {isDark ? (
+                <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F97316] transition-transform duration-300 rotate-0 hover:rotate-45" />
+              ) : (
+                <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 hover:text-[#F97316] transition-transform duration-300" />
+              )}
+            </button>
+
             {/* AR / EN Language Switcher Pill */}
             <button
               onClick={toggleLanguage}

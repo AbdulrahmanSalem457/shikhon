@@ -112,61 +112,61 @@ export const DashboardView = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         
         {/* Total parts card */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-slate-200 dark:border-[#1E293B] shadow-sm flex items-center justify-between transition-colors">
           <div>
-            <span className="text-xs text-[#64748B] block font-semibold">
+            <span className="text-xs text-[#64748B] dark:text-[#94A3B8] block font-semibold">
               {t('dashboard.totalParts')}
             </span>
-            <span className="text-2xl font-black text-[#0F172A] mt-1 block">
+            <span className="text-2xl font-black text-[#0F172A] dark:text-[#F8FAFC] mt-1 block">
               {products.length}
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#F97316]">
+          <div className="w-11 h-11 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/40 flex items-center justify-center text-[#F97316]">
             <Package className="w-5 h-5" />
           </div>
         </div>
 
         {/* In Stock card */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-slate-200 dark:border-[#1E293B] shadow-sm flex items-center justify-between transition-colors">
           <div>
-            <span className="text-xs text-[#64748B] block font-semibold">
+            <span className="text-xs text-[#64748B] dark:text-[#94A3B8] block font-semibold">
               {t('dashboard.inStock')}
             </span>
-            <span className="text-2xl font-black text-emerald-600 mt-1 block">
+            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 block">
               {products.filter(p => p.in_stock !== false).length}
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+          <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="w-5 h-5" />
           </div>
         </div>
 
         {/* Categories count card */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-slate-200 dark:border-[#1E293B] shadow-sm flex items-center justify-between transition-colors">
           <div>
-            <span className="text-xs text-[#64748B] block font-semibold">
+            <span className="text-xs text-[#64748B] dark:text-[#94A3B8] block font-semibold">
               {t('dashboard.categoriesCount')}
             </span>
-            <span className="text-2xl font-black text-[#0F172A] mt-1 block">
+            <span className="text-2xl font-black text-[#0F172A] dark:text-[#F8FAFC] mt-1 block">
               {new Set(products.map(p => p.category || 'General')).size}
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#64748B]">
+          <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[#64748B] dark:text-[#94A3B8]">
             <Layers className="w-5 h-5" />
           </div>
         </div>
       </div>
 
       {/* Main Action Header Card */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 mb-6 border border-slate-200 shadow-sm">
+      <div className="bg-white dark:bg-[#111827] rounded-3xl p-5 sm:p-6 mb-6 border border-slate-200 dark:border-[#1E293B] shadow-sm transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Title & Sub */}
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#0F172A]">
+            <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] dark:text-[#F8FAFC]">
               {t('dashboard.title')}
             </h1>
-            <p className="text-xs text-[#64748B] mt-0.5">
+            <p className="text-xs text-[#64748B] dark:text-[#94A3B8] mt-0.5">
               {t('dashboard.subtitle')}
             </p>
           </div>
@@ -174,7 +174,7 @@ export const DashboardView = () => {
           {/* Add Product Button (Vibrant Orange #F97316) */}
           <button
             onClick={() => setIsAddOpen(true)}
-            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-orange-500/25 transition-all self-start md:self-auto cursor-pointer"
+            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#FB923C] hover:to-[#EA580C] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-orange-500/25 transition-all self-start md:self-auto cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>{t('dashboard.addProductBtn')}</span>
@@ -183,17 +183,17 @@ export const DashboardView = () => {
         </div>
 
         {/* Search & View Controls Bar */}
-        <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mt-6 pt-5 border-t border-slate-100 dark:border-[#1E293B] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
-            <Search className={`w-4 h-4 text-[#64748B] absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3' : 'left-3'}`} />
+            <Search className={`w-4 h-4 text-[#64748B] dark:text-[#94A3B8] absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3' : 'left-3'}`} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('dashboard.searchPlaceholder')}
-              className={`w-full py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
+              className={`w-full py-2 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-200 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
             />
           </div>
 
@@ -204,7 +204,7 @@ export const DashboardView = () => {
             <button
               onClick={fetchProducts}
               disabled={loading}
-              className="p-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-2 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-200 dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               title={t('dashboard.refresh')}
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -216,7 +216,7 @@ export const DashboardView = () => {
               className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 viewMode === 'grid'
                   ? 'bg-[#F97316] text-white border-[#F97316] shadow-sm'
-                  : 'bg-[#F8FAFC] border-slate-200 text-[#64748B] hover:text-[#0F172A]'
+                  : 'bg-[#F8FAFC] dark:bg-[#090D16] border-slate-200 dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC]'
               }`}
               title={t('dashboard.viewGrid')}
             >
@@ -229,7 +229,7 @@ export const DashboardView = () => {
               className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 viewMode === 'table'
                   ? 'bg-[#F97316] text-white border-[#F97316] shadow-sm'
-                  : 'bg-[#F8FAFC] border-slate-200 text-[#64748B] hover:text-[#0F172A]'
+                  : 'bg-[#F8FAFC] dark:bg-[#090D16] border-slate-200 dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC]'
               }`}
               title={t('dashboard.viewTable')}
             >
@@ -243,12 +243,12 @@ export const DashboardView = () => {
 
       {/* Product Display: Grid or Table */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm">
+        <div className="text-center py-16 bg-white dark:bg-[#111827] rounded-3xl border border-slate-200 dark:border-[#1E293B] shadow-sm transition-colors">
           <Package className="w-10 h-10 text-[#94A3B8] mx-auto mb-3" />
-          <h3 className="text-sm font-bold text-[#0F172A] mb-1">
+          <h3 className="text-sm font-bold text-[#0F172A] dark:text-[#F8FAFC] mb-1">
             {t('table.noData')}
           </h3>
-          <p className="text-xs text-[#64748B]">
+          <p className="text-xs text-[#64748B] dark:text-[#94A3B8]">
             اضغط على زر "إضافة قطعة غيار جديدة" لبدء إضافة القطع.
           </p>
         </div>
@@ -262,43 +262,43 @@ export const DashboardView = () => {
             return (
               <div
                 key={product.id}
-                className="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all flex flex-col justify-between"
+                className="bg-white dark:bg-[#111827] rounded-3xl p-4 border border-slate-200 dark:border-[#1E293B] shadow-sm hover:shadow-md hover:border-orange-300 dark:hover:border-orange-500/40 transition-all flex flex-col justify-between"
               >
                 {/* Image */}
-                <div className="w-full h-40 rounded-2xl bg-[#F8FAFC] p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-slate-100">
+                <div className="w-full h-40 rounded-2xl bg-[#F8FAFC] dark:bg-[#090D16] p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-slate-100 dark:border-[#1E293B]">
                   <img
                     src={product.image_url}
                     alt={displayName}
                     className="w-full h-full object-contain filter drop-shadow-sm"
                   />
-                  <span className="absolute top-2 start-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 border border-orange-200 text-[#F97316]">
+                  <span className="absolute top-2 start-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/40 text-[#F97316]">
                     {product.category || 'General'}
                   </span>
                 </div>
 
                 {/* Details */}
                 <div className="flex-1">
-                  <span className="text-[10px] font-mono font-bold text-[#64748B] block mb-1">
+                  <span className="text-[10px] font-mono font-bold text-[#64748B] dark:text-[#94A3B8] block mb-1">
                     {product.part_number || product.id?.slice(0, 8)}
                   </span>
-                  <h3 className="text-sm font-bold text-[#0F172A] line-clamp-2 leading-snug">
+                  <h3 className="text-sm font-bold text-[#0F172A] dark:text-[#F8FAFC] line-clamp-2 leading-snug">
                     {displayName}
                   </h3>
-                  <p className="text-xs text-[#64748B] line-clamp-1 mt-0.5">
+                  <p className="text-xs text-[#64748B] dark:text-[#94A3B8] line-clamp-1 mt-0.5">
                     {subName}
                   </p>
                   {product.price && (
-                    <div className="mt-2 text-sm font-black text-[#0F172A]">
+                    <div className="mt-2 text-sm font-black text-[#0F172A] dark:text-[#F8FAFC]">
                       ${product.price}
                     </div>
                   )}
                 </div>
 
                 {/* Actions */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-[#1E293B] flex items-center justify-between gap-2">
                   <button
                     onClick={() => setEditingProduct(product)}
-                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-[#F8FAFC] hover:bg-orange-50 border border-slate-200 hover:border-orange-200 text-[#0F172A] hover:text-[#F97316] text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 hover:bg-orange-50 dark:hover:bg-orange-950/30 border border-slate-200 dark:border-slate-700 hover:border-orange-200 text-[#0F172A] dark:text-[#F8FAFC] hover:text-[#F97316] text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                     <span>{t('table.edit')}</span>
@@ -306,7 +306,7 @@ export const DashboardView = () => {
 
                   <button
                     onClick={() => setDeletingProduct(product)}
-                    className="p-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-xl bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30 transition-colors cursor-pointer"
                     title={t('table.delete')}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -319,10 +319,10 @@ export const DashboardView = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
+        <div className="bg-white dark:bg-[#111827] rounded-3xl overflow-hidden border border-slate-200 dark:border-[#1E293B] shadow-sm transition-colors">
           <div className="overflow-x-auto">
             <table className="w-full text-start text-xs">
-              <thead className="bg-[#F8FAFC] border-b border-slate-200 text-[#64748B] uppercase tracking-wider text-[11px]">
+              <thead className="bg-[#F8FAFC] dark:bg-[#090D16] border-b border-slate-200 dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="p-4">{t('table.image')}</th>
                   <th className="p-4">{t('table.nameAr')}</th>
@@ -333,45 +333,45 @@ export const DashboardView = () => {
                   <th className="p-4 text-end">{t('table.actions')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-[#1E293B]">
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={product.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="p-4">
                       <img
                         src={product.image_url}
                         alt=""
-                        className="w-12 h-12 object-contain rounded-xl bg-[#F8FAFC] p-1 border border-slate-200"
+                        className="w-12 h-12 object-contain rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] p-1 border border-slate-200 dark:border-[#1E293B]"
                       />
                     </td>
-                    <td className="p-4 font-bold text-[#0F172A] max-w-xs truncate" dir="rtl">
+                    <td className="p-4 font-bold text-[#0F172A] dark:text-[#F8FAFC] max-w-xs truncate" dir="rtl">
                       {product.name_ar}
                     </td>
-                    <td className="p-4 font-medium text-slate-700 max-w-xs truncate" dir="ltr">
+                    <td className="p-4 font-medium text-slate-700 dark:text-[#94A3B8] max-w-xs truncate" dir="ltr">
                       {product.name_en}
                     </td>
                     <td className="p-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-orange-50 border border-orange-200 text-[#F97316]">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/40 text-[#F97316]">
                         {product.category || 'General'}
                       </span>
                     </td>
-                    <td className="p-4 font-mono font-semibold text-[#64748B]">
+                    <td className="p-4 font-mono font-semibold text-[#64748B] dark:text-[#94A3B8]">
                       {product.part_number || '—'}
                     </td>
-                    <td className="p-4 font-bold text-[#0F172A]">
+                    <td className="p-4 font-bold text-[#0F172A] dark:text-[#F8FAFC]">
                       {product.price ? `$${product.price}` : '—'}
                     </td>
                     <td className="p-4 text-end">
                       <div className="inline-flex items-center gap-1.5">
                         <button
                           onClick={() => setEditingProduct(product)}
-                          className="p-1.5 rounded-lg bg-[#F8FAFC] hover:bg-orange-50 border border-slate-200 hover:border-orange-200 text-[#0F172A] hover:text-[#F97316] transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-[#F8FAFC] dark:bg-slate-800 hover:bg-orange-50 dark:hover:bg-orange-950/30 border border-slate-200 dark:border-slate-700 hover:border-orange-200 text-[#0F172A] dark:text-[#F8FAFC] hover:text-[#F97316] transition-colors cursor-pointer"
                           title={t('table.edit')}
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setDeletingProduct(product)}
-                          className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30 transition-colors cursor-pointer"
                           title={t('table.delete')}
                         >
                           <Trash2 className="w-3.5 h-3.5" />

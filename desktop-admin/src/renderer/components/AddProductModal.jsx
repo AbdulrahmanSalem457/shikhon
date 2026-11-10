@@ -79,12 +79,13 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
   const processFile = (file) => {
     if (!file.type.startsWith('image/')) {
-      setErrorMessage('Please select a valid image file (PNG, JPG, WEBP).');
+      setErrorMessage(t('messages.selectImageAlert'));
       return;
     }
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-    setErrorMessage('');
+    const reader = new FileReader();
+    reader.onload = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleDragOver = (e) => {
@@ -103,48 +104,52 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
     if (file) processFile(file);
   };
 
-  // Quick Copy between Arabic & English fields
+  // Quick Mirror/Copy Between Arabic & English
   const copyArToEn = () => {
-    if (nameAr) setNameEn(nameAr);
+    if (nameAr && !nameEn) setNameEn(nameAr);
   };
 
   const copyEnToAr = () => {
-    if (nameEn) setNameAr(nameEn);
+    if (nameEn && !nameAr) setNameAr(nameEn);
   };
 
-  // Form Submit Handler
+  // Submission via direct REST APIs
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
-    setStatusMessage('');
 
-    if (!nameAr.trim() || !nameEn.trim()) {
-      setErrorMessage(t('form.validationNameRequired'));
+    if (!nameAr.trim() && !nameEn.trim()) {
+      setErrorMessage(t('messages.nameRequired'));
       return;
     }
 
-    if (!imageFile) {
-      setErrorMessage(t('form.validationImageRequired'));
+    if (!imageFile && !imagePreview) {
+      setErrorMessage(t('messages.imageRequired'));
       return;
     }
 
     try {
       setLoading(true);
+      setStatusMessage(t('messages.uploadingImage'));
 
-      // STEP 1: Upload Image to Supabase Storage Bucket via REST API
-      setStatusMessage(t('form.uploadingImage'));
-      const uploadRes = await uploadImageApi(imageFile);
-      const publicImageUrl = uploadRes.publicUrl;
+      let finalImageUrl = imagePreview;
 
-      // STEP 2: Insert Record via Supabase REST API (POST /rest/v1/products)
-      setStatusMessage(t('form.savingProduct'));
+      // 1. Upload Image to Supabase Storage Bucket via API
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+        finalImageUrl = await uploadImageApi(imageFile, fileName);
+      }
+
+      // 2. Insert Product into PostgreSQL database via API
+      setStatusMessage(t('messages.savingProduct'));
       const productPayload = {
-        name_ar: nameAr.trim(),
-        name_en: nameEn.trim(),
-        image_url: publicImageUrl,
+        name_ar: nameAr.trim() || nameEn.trim(),
+        name_en: nameEn.trim() || nameAr.trim(),
         category,
-        part_number: partNumber.trim() || null,
+        part_number: partNumber.trim() || `SHK-${Math.floor(1000 + Math.random() * 9000)}`,
         price: price ? parseFloat(price) : null,
+        image_url: finalImageUrl,
         in_stock: true
       };
 
@@ -164,28 +169,28 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-[#1E293B] my-8 transition-colors">
         
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-5 end-5 p-1.5 rounded-full bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 cursor-pointer transition-colors"
+          className="absolute top-5 end-5 p-1.5 rounded-full bg-[#F8FAFC] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Title */}
-        <h2 className="text-xl font-black text-[#0F172A] mb-1">
+        <h2 className="text-xl font-black text-[#0F172A] dark:text-[#F8FAFC] mb-1">
           {t('form.addNewTitle')}
         </h2>
-        <p className="text-xs text-[#64748B] mb-6">
+        <p className="text-xs text-[#64748B] dark:text-[#94A3B8] mb-6">
           {t('dashboard.subtitle')}
         </p>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-2xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
@@ -195,7 +200,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
           
           {/* Drag & Drop Image Upload Zone */}
           <div>
-            <label className="text-xs font-bold text-[#0F172A] block mb-1.5">
+            <label className="text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
               {t('form.imageUploadLabel')}
             </label>
             
@@ -206,8 +211,8 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
               onClick={() => fileInputRef.current?.click()}
               className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer p-5 flex flex-col items-center justify-center text-center ${
                 isDragging
-                  ? 'border-[#F97316] bg-orange-50'
-                  : 'border-slate-300 hover:border-[#F97316] bg-[#F8FAFC] hover:bg-orange-50/30'
+                  ? 'border-[#F97316] bg-orange-50 dark:bg-orange-950/30'
+                  : 'border-slate-300 dark:border-[#1E293B] hover:border-[#F97316] bg-[#F8FAFC] dark:bg-[#090D16] hover:bg-orange-50/30 dark:hover:bg-orange-950/20'
               }`}
             >
               <input
@@ -231,13 +236,13 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 </div>
               ) : (
                 <>
-                  <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center mb-2.5">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/40 flex items-center justify-center mb-2.5">
                     <UploadCloud className="w-6 h-6 text-[#F97316]" />
                   </div>
-                  <p className="text-xs font-semibold text-[#0F172A]">
+                  <p className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC]">
                     {t('form.dragDropText')}
                   </p>
-                  <p className="text-[11px] text-[#64748B] mt-1">
+                  <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8] mt-1">
                     {t('form.supportedFormats')}
                   </p>
                 </>
@@ -251,7 +256,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
             {/* Arabic Name */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-[#0F172A]">
+                <label className="text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC]">
                   {t('form.nameArLabel')}
                 </label>
                 <button
@@ -271,14 +276,14 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={nameAr}
                 onChange={(e) => setNameAr(e.target.value)}
                 placeholder={t('form.nameArPlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] font-medium focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all"
               />
             </div>
 
             {/* English Name */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-[#0F172A]">
+                <label className="text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC]">
                   {t('form.nameEnLabel')}
                 </label>
                 <button
@@ -298,7 +303,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
                 placeholder={t('form.nameEnPlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] font-medium focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all"
               />
             </div>
 
@@ -309,13 +314,13 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
             
             {/* Category */}
             <div>
-              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
                 {t('form.categoryLabel')}
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               >
                 {CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>
@@ -327,7 +332,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
             {/* Part Number (OEM) */}
             <div>
-              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
                 {t('form.partNumberLabel')}
               </label>
               <input
@@ -335,13 +340,13 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={partNumber}
                 onChange={(e) => setPartNumber(e.target.value)}
                 placeholder="BRM-9942-X"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs font-mono text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs font-mono text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               />
             </div>
 
             {/* Price */}
             <div>
-              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] block mb-1.5">
                 {t('form.priceLabel')}
               </label>
               <input
@@ -351,7 +356,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="199.99"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#090D16] border border-slate-300 dark:border-[#1E293B] text-xs text-[#0F172A] dark:text-[#F8FAFC] focus:border-[#F97316] dark:focus:border-[#FB923C] focus:bg-white dark:focus:bg-[#090D16] focus:outline-none transition-all"
               />
             </div>
 
@@ -373,7 +378,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 type="button"
                 onClick={handleClose}
                 disabled={loading}
-                className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 text-xs font-semibold cursor-pointer transition-colors"
+                className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold cursor-pointer transition-colors"
               >
                 {t('form.cancelBtn')}
               </button>
@@ -381,7 +386,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white text-xs font-bold shadow-md shadow-orange-500/25 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer transition-all"
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#FB923C] hover:to-[#EA580C] text-white text-xs font-bold shadow-md shadow-orange-500/25 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer transition-all"
               >
                 <Check className="w-4 h-4" />
                 <span>{t('form.saveBtn')}</span>
