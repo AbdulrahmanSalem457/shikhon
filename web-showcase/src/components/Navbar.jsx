@@ -30,8 +30,8 @@ export const Navbar = () => {
           
           {/* Brand Logo & Name */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 rounded-full liquid-pill flex items-center justify-center p-1 transition-transform duration-300 group-hover:scale-105">
-              <BrandLogo className="w-full h-full" />
+            <div className="relative h-11 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+              <BrandLogo className="h-10 w-auto max-w-[160px]" />
             </div>
 
             <div className="flex flex-col">

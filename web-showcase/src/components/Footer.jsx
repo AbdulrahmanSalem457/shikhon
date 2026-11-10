@@ -18,8 +18,8 @@ export const Footer = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full liquid-pill flex items-center justify-center p-1.5">
-                <BrandLogo className="w-full h-full" />
+              <div className="h-12 flex items-center justify-start">
+                <BrandLogo className="h-12 w-auto max-w-[190px]" />
               </div>
               <span className="text-2xl font-black text-slate-800 dark:text-white">
                 {t('brand.fullName')}

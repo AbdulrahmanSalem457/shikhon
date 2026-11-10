@@ -16,8 +16,8 @@ export const AdminNavbar = () => {
         
         {/* Brand Info with BrandLogo */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full liquid-pill flex items-center justify-center p-1">
-            <BrandLogo className="w-full h-full" />
+          <div className="h-10 flex items-center justify-center">
+            <BrandLogo className="h-9 w-auto max-w-[150px]" />
           </div>
           <div>
             <div className="flex items-center gap-2">

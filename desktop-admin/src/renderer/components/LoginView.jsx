@@ -77,8 +77,8 @@ export const LoginView = () => {
         
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto rounded-3xl liquid-pill flex items-center justify-center p-2.5 mb-4 shadow-sm">
-            <BrandLogo className="w-full h-full" />
+          <div className="h-24 mx-auto flex items-center justify-center p-1 mb-3">
+            <BrandLogo className="h-24 w-auto max-w-[260px]" />
           </div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             {t('brand.name')}
