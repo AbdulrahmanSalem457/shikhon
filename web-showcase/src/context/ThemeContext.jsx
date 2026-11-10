@@ -21,34 +21,67 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [theme]);
 
-  // High-performance theme toggle with zero mobile GPU stutter:
-  // Disables CSS transitions during the theme switch frame to prevent simultaneous multi-element transition lag
-  const toggleTheme = () => {
-    const css = document.createElement('style');
-    css.type = 'text/css';
-    css.appendChild(
-      document.createTextNode(
-        `*, *::before, *::after {
-          -webkit-transition: none !important;
-          -moz-transition: none !important;
-          -o-transition: none !important;
-          -ms-transition: none !important;
-          transition: none !important;
-        }`
-      )
-    );
-    document.head.appendChild(css);
+  // Luxury high-performance theme toggle animation:
+  // Uses native View Transition API (Circular Ripple Reveal from click position) on modern browsers (Chrome/Safari 18+/Edge),
+  // with a silky 300ms color-fade fallback that never touches layout properties to prevent mobile lag.
+  const toggleTheme = (e) => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
 
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    // 1. Native View Transition API (Ripple Reveal)
+    if (
+      typeof document !== 'undefined' &&
+      typeof document.startViewTransition === 'function' &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      let x = window.innerWidth / 2;
+      let y = 40;
 
-    // Remove the style tag after layout repaint on next frame
-    window.requestAnimationFrame(() => {
-      // Force layout flush
-      void document.body.offsetHeight;
-      if (document.head.contains(css)) {
-        document.head.removeChild(css);
+      if (e && e.clientX !== undefined && e.clientX !== 0) {
+        x = e.clientX;
+        y = e.clientY;
+      } else if (e && e.currentTarget) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.top + rect.height / 2;
       }
-    });
+
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      const transition = document.startViewTransition(() => {
+        setTheme(nextTheme);
+      });
+
+      transition.ready.then(() => {
+        const clipPath = [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`
+        ];
+
+        document.documentElement.animate(
+          {
+            clipPath: clipPath,
+          },
+          {
+            duration: 420,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+            pseudoElement: '::view-transition-new(root)',
+          }
+        );
+      });
+      return;
+    }
+
+    // 2. Silky Color Fade Transition Fallback (300ms)
+    const root = document.documentElement;
+    root.classList.add('theme-transitioning');
+    setTheme(nextTheme);
+
+    setTimeout(() => {
+      root.classList.remove('theme-transitioning');
+    }, 350);
   };
 
   return (

@@ -42,9 +42,9 @@ export const AdminNavbar = () => {
         {/* Right Controls */}
         <div className="flex items-center gap-2.5">
 
-          {/* Dark / Light Mode Switcher */}
+          {/* Dark / Light Mode Switcher with Ripple / Smooth Transition */}
           <button
-            onClick={toggleTheme}
+            onClick={(e) => toggleTheme(e)}
             aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             title={isDark ? (language === 'ar' ? 'تفعيل الوضع النهاري' : 'Switch to Light Mode') : (language === 'ar' ? 'تفعيل الوضع الداكن' : 'Switch to Dark Mode')}
             className="p-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white hover:border-orange-500/50 cursor-pointer transition-all shrink-0"

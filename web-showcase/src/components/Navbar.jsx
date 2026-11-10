@@ -3,6 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { BrandLogo } from './BrandLogo';
 import { Globe, Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar = () => {
   const { language, toggleLanguage, t } = useLanguage();
@@ -81,18 +82,29 @@ export const Navbar = () => {
           {/* Right Action Controls: Theme Switcher + AR/EN Language Pill */}
           <div className="flex items-center gap-2 shrink-0">
             
-            {/* Dark / Light Mode Switcher */}
+            {/* Dark / Light Mode Switcher with Fluid Icon & Reveal Transition */}
             <button
-              onClick={toggleTheme}
+              onClick={(e) => toggleTheme(e)}
               aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               title={isDark ? (language === 'ar' ? 'تفعيل الوضع النهاري' : 'Switch to Light Mode') : (language === 'ar' ? 'تفعيل الوضع الداكن' : 'Switch to Dark Mode')}
-              className="p-1.5 sm:p-2 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white hover:border-orange-500/50 cursor-pointer transition-all duration-200 shrink-0"
+              className="p-1.5 sm:p-2 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white hover:border-orange-500/50 cursor-pointer transition-all duration-200 shrink-0 overflow-hidden"
             >
-              {isDark ? (
-                <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F97316] transition-transform duration-300 rotate-0 hover:rotate-45" />
-              ) : (
-                <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 hover:text-[#F97316] transition-transform duration-300" />
-              )}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={isDark ? 'dark' : 'light'}
+                  initial={{ y: -8, opacity: 0, rotate: -45 }}
+                  animate={{ y: 0, opacity: 1, rotate: 0 }}
+                  exit={{ y: 8, opacity: 0, rotate: 45 }}
+                  transition={{ duration: 0.18 }}
+                  className="flex items-center justify-center"
+                >
+                  {isDark ? (
+                    <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F97316]" />
+                  ) : (
+                    <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 hover:text-[#F97316]" />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </button>
 
             {/* AR / EN Language Switcher Pill */}

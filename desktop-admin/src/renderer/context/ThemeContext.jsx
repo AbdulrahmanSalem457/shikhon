@@ -21,30 +21,62 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [theme]);
 
-  const toggleTheme = () => {
-    const css = document.createElement('style');
-    css.type = 'text/css';
-    css.appendChild(
-      document.createTextNode(
-        `*, *::before, *::after {
-          -webkit-transition: none !important;
-          -moz-transition: none !important;
-          -o-transition: none !important;
-          -ms-transition: none !important;
-          transition: none !important;
-        }`
-      )
-    );
-    document.head.appendChild(css);
+  const toggleTheme = (e) => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
 
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    if (
+      typeof document !== 'undefined' &&
+      typeof document.startViewTransition === 'function' &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      let x = window.innerWidth / 2;
+      let y = 40;
 
-    window.requestAnimationFrame(() => {
-      void document.body.offsetHeight;
-      if (document.head.contains(css)) {
-        document.head.removeChild(css);
+      if (e && e.clientX !== undefined && e.clientX !== 0) {
+        x = e.clientX;
+        y = e.clientY;
+      } else if (e && e.currentTarget) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.top + rect.height / 2;
       }
-    });
+
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      const transition = document.startViewTransition(() => {
+        setTheme(nextTheme);
+      });
+
+      transition.ready.then(() => {
+        const clipPath = [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`
+        ];
+
+        document.documentElement.animate(
+          {
+            clipPath: clipPath,
+          },
+          {
+            duration: 400,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+            pseudoElement: '::view-transition-new(root)',
+          }
+        );
+      });
+      return;
+    }
+
+    const root = document.documentElement;
+    root.classList.add('theme-transitioning');
+    setTheme(nextTheme);
+
+    setTimeout(() => {
+      root.classList.remove('theme-transitioning');
+    }, 350);
   };
 
   return (
