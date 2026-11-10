@@ -23,254 +23,81 @@
   }
 }
 
-/* ============================================================
-   SHIKHON LIQUID GLASS & FLUID WATER ANIMATION SYSTEM
-   Colors: Midnight Navy #0F172A | Vibrant Orange #F97316 |
-           Metallic Slate #64748B | Snow White #FFFFFF / #F8FAFC
-   ============================================================ */
-
-/* 1. Fluid Water Blob Morphing Animation */
-@keyframes waterMorph {
-  0%, 100% {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    transform: rotate(0deg) scale(1);
-  }
-  33% {
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-    transform: rotate(120deg) scale(1.06);
-  }
-  66% {
-    border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
-    transform: rotate(240deg) scale(0.96);
-  }
-}
-
-/* 2. Fluid Liquid Gradient Wave Animation */
-@keyframes fluidGradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* 3. Water Specular Sheen (Light beam across liquid glass) */
-@keyframes liquidSheen {
-  0% {
-    transform: translateX(-150%) skewX(-25deg);
-  }
-  50%, 100% {
-    transform: translateX(250%) skewX(-25deg);
-  }
-}
-
-/* 4. Fluid Water Ripple Pulse */
-@keyframes waterRipplePulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 14px rgba(249, 115, 22, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
-  }
-}
-
-/* 5. Fluid Float Bobbing */
-@keyframes fluidFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-}
-
+/* Shikhon Brand Color System (Midnight Navy + Vibrant Orange + Metallic Slate + Snow White) */
 @layer components {
-  /* Translucent Liquid Glass Container */
+  /* Header & Navigation Bar (Midnight Navy #0F172A) */
+  .header-midnight {
+    background-color: #0F172A;
+    border-bottom: 1px solid #1E293B;
+    color: #FFFFFF;
+  }
+
+  /* Translucent Floating White Panel */
   .liquid-glass {
-    position: relative;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(24px) saturate(190%);
-    -webkit-backdrop-filter: blur(24px) saturate(190%);
-    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     box-shadow: 
-      0 12px 32px -8px rgba(15, 23, 42, 0.06),
-      0 4px 12px -2px rgba(15, 23, 42, 0.03),
-      inset 0 1.5px 1px rgba(255, 255, 255, 0.9),
-      inset 0 -1px 1px rgba(15, 23, 42, 0.02);
+      0 10px 25px -5px rgba(15, 23, 42, 0.05),
+      0 4px 10px -2px rgba(15, 23, 42, 0.02);
   }
 
-  /* Liquid Glass Floating Blob for ambient background */
-  .liquid-blob {
-    position: absolute;
-    filter: blur(60px);
-    opacity: 0.65;
-    animation: waterMorph 16s ease-in-out infinite alternate;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Liquid Glass Card with Water Glare & Specular Reflection */
+  /* Product Cards (#FFFFFF with Metallic Slate Border & Orange Glow on Hover) */
   .liquid-glass-card {
     position: relative;
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
-    border-radius: 1.25rem;
-    box-shadow: 
-      0 4px 20px -2px rgba(15, 23, 42, 0.05),
-      inset 0 1px 1px rgba(255, 255, 255, 0.8);
-    overflow: hidden;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .liquid-glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 80%;
-    height: 100%;
-    background: linear-gradient(
-      90deg, 
-      transparent 0%, 
-      rgba(255, 255, 255, 0.4) 40%, 
-      rgba(249, 115, 22, 0.08) 50%, 
-      rgba(255, 255, 255, 0.5) 60%, 
-      transparent 100%
-    );
-    transform: skewX(-25deg);
-    pointer-events: none;
-    z-index: 10;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .liquid-glass-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    border-color: rgba(249, 115, 22, 0.6);
+    transform: translateY(-4px);
+    border-color: #F97316;
     box-shadow: 
-      0 20px 40px -10px rgba(249, 115, 22, 0.18),
-      0 0 25px rgba(249, 115, 22, 0.12),
-      inset 0 1.5px 1px rgba(255, 255, 255, 1);
+      0 18px 36px -8px rgba(249, 115, 22, 0.16),
+      0 0 1px rgba(249, 115, 22, 0.4);
   }
 
-  .liquid-glass-card:hover::before {
-    animation: liquidSheen 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Liquid Water Button (Vibrant Orange with fluid gradient wave) */
-  .liquid-button {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%);
-    background-size: 200% 200%;
-    animation: fluidGradient 6s ease infinite;
+  /* Primary Action Button (Vibrant Orange #F97316) */
+  .btn-accent {
+    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
     color: #FFFFFF;
     font-weight: 700;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 
-      0 4px 14px rgba(249, 115, 22, 0.35),
-      inset 0 1px 1px rgba(255, 255, 255, 0.4);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.28);
+    transition: all 0.2s ease;
   }
 
-  .liquid-button::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-    transform: skewX(-20deg);
-    transition: all 0.6s ease;
-  }
-
-  .liquid-button:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 
-      0 8px 24px rgba(249, 115, 22, 0.45),
-      0 0 15px rgba(249, 115, 22, 0.3),
-      inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
-  }
-
-  .liquid-button:hover::after {
-    left: 150%;
-  }
-
-  .liquid-button:active {
-    transform: translateY(0) scale(0.97);
-  }
-
-  /* Liquid Water Ripple Badge */
-  .liquid-ripple {
-    animation: waterRipplePulse 2.4s infinite;
-  }
-
-  /* Liquid Pill Container (Water drop rounded shape with soft meniscus border) */
-  .liquid-pill {
-    position: relative;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    color: #0F172A;
-    box-shadow: 
-      0 2px 8px rgba(15, 23, 42, 0.04),
-      inset 0 1px 0.5px rgba(255, 255, 255, 0.8);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .liquid-pill:hover {
-    border-color: rgba(249, 115, 22, 0.5);
-    box-shadow: 
-      0 4px 16px rgba(249, 115, 22, 0.12),
-      inset 0 1px 1px rgba(255, 255, 255, 1);
+  .btn-accent:hover {
+    background: linear-gradient(135deg, #FB923C 0%, #EA580C 100%);
+    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.38);
     transform: translateY(-1px);
   }
 
-  /* Liquid Form Inputs (#FFFFFF with Metallic Slate Border & Orange Water Focus) */
+  /* Pill container */
+  .liquid-pill {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    color: #0F172A;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s ease;
+  }
+
+  /* Form Inputs (#FFFFFF with Metallic Slate Border #CBD5E1) */
   .glass-input {
     background: #FFFFFF;
     border: 1px solid #CBD5E1;
     color: #0F172A;
-    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s ease;
   }
 
   .glass-input:focus {
     border-color: #F97316;
-    background: #FFFFFF;
-    box-shadow: 
-      0 0 0 3.5px rgba(249, 115, 22, 0.18),
-      0 4px 12px rgba(249, 115, 22, 0.08);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     outline: none;
-  }
-
-  /* Water Caustic Specular Glare */
-  .specular-glare {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 45%;
-    pointer-events: none;
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  }
-
-  /* Floating Water Bob */
-  .animate-float {
-    animation: fluidFloat 4s ease-in-out infinite;
   }
 }
 
-/* Custom Scrollbar (Metallic Slate #94A3B8 with smooth water roundness) */
+/* Custom Scrollbar (Metallic Slate #94A3B8) */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -283,9 +110,8 @@
 ::-webkit-scrollbar-thumb {
   background: #94A3B8;
   border-radius: 9999px;
-  border: 1.5px solid #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #F97316;
+  background: #64748B;
 }

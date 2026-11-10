@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { ProductModal } from './ProductModal';
-import { Eye, MessageCircle, AlertCircle, Tag, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Eye, MessageCircle, AlertCircle, Tag } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const CATEGORIES = [
   'All',
@@ -35,94 +35,75 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
   });
 
   return (
-    <section id="catalog" className="relative py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full max-w-full overflow-hidden">
+    <section id="catalog" className="relative py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full max-w-full overflow-hidden">
       
-      {/* Background Water Ambient Blobs (Safely contained inside overflow-hidden wrapper) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="liquid-blob w-72 sm:w-[400px] h-72 sm:h-[400px] top-1/3 -left-16 sm:-left-32 bg-gradient-to-r from-orange-400/10 to-amber-200/10" />
-        <div className="liquid-blob w-64 sm:w-[350px] h-64 sm:h-[350px] bottom-10 -right-16 sm:-right-24 bg-gradient-to-l from-slate-300/20 to-orange-400/10" />
-      </div>
-
       {/* Header (Midnight Navy #0F172A) */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6 relative z-10 w-full">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6 w-full">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="relative flex h-2.5 w-2.5 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#F97316]" />
-            </span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#F97316] animate-pulse shrink-0" />
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#F97316]">
               {t('catalog.title')}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#0F172A] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-[#0F172A]">
             {t('catalog.subtitle')}
           </h2>
         </div>
 
-        {/* Counter Badge with Liquid Pill */}
-        <motion.div 
-          whileHover={{ scale: 1.05 }}
-          className="liquid-pill px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-bold text-[#0F172A] self-start md:self-auto cursor-default flex items-center gap-1.5 shrink-0"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-[#F97316]" />
-          <span>{t('catalog.resultsCount', { count: filteredProducts.length })}</span>
-        </motion.div>
+        {/* Counter Badge */}
+        <div className="bg-white border border-slate-200 px-3.5 py-1.5 rounded-full text-xs font-bold text-[#0F172A] shadow-sm self-start md:self-auto shrink-0">
+          {t('catalog.resultsCount', { count: filteredProducts.length })}
+        </div>
       </div>
 
-      {/* Category Pills Bar with Fluid Wave transitions */}
-      <div id="categories" className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-3 sm:pb-4 mb-6 sm:mb-8 no-scrollbar relative z-10 w-full max-w-full touch-pan-x">
+      {/* Category Pills Bar */}
+      <div id="categories" className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar w-full max-w-full touch-pan-x">
         {CATEGORIES.map(cat => {
           const isSelected = selectedCategory === cat;
           const label = t(`categories.${cat}`);
 
           return (
-            <motion.button
+            <button
               key={cat}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 cursor-pointer shrink-0 ${
+              className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer shrink-0 ${
                 isSelected
-                  ? 'liquid-button shadow-lg shadow-orange-500/25'
-                  : 'liquid-pill text-[#64748B] hover:text-[#0F172A]'
+                  ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-md shadow-orange-500/20'
+                  : 'bg-white border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:border-orange-300 shadow-sm'
               }`}
             >
               {label}
-            </motion.button>
+            </button>
           );
         })}
       </div>
 
-      {/* Catalog Grid with Staggered Fluid Water Physics */}
+      {/* Catalog Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
           {[...Array(4)].map((_, idx) => (
-            <div key={idx} className="h-80 rounded-2xl liquid-glass animate-pulse p-4 flex flex-col justify-between w-full">
-              <div className="w-full h-44 rounded-xl bg-slate-100/80" />
-              <div className="space-y-2 mt-4">
-                <div className="h-4 bg-slate-200/80 rounded-full w-3/4" />
-                <div className="h-3 bg-slate-100 rounded-full w-1/2" />
+            <div key={idx} className="h-72 rounded-2xl bg-white border border-slate-200 animate-pulse p-4 flex flex-col justify-between shadow-sm w-full">
+              <div className="w-full h-36 rounded-xl bg-slate-100" />
+              <div className="space-y-2">
+                <div className="h-3.5 bg-slate-200 rounded-full w-3/4" />
+                <div className="h-2.5 bg-slate-100 rounded-full w-1/2" />
               </div>
             </div>
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center py-16 sm:py-20 px-6 rounded-3xl liquid-glass max-w-md mx-auto relative z-10 w-full"
-        >
-          <AlertCircle className="w-12 h-12 text-[#94A3B8] mx-auto mb-3" />
+        <div className="text-center py-16 px-4 rounded-3xl bg-white border border-slate-200 shadow-sm max-w-md mx-auto w-full">
+          <AlertCircle className="w-10 h-10 text-slate-400 mx-auto mb-3" />
           <h3 className="text-base font-bold text-[#0F172A] mb-1">
             {t('catalog.noProductsFound')}
           </h3>
           <p className="text-xs text-[#64748B]">
             {t('catalog.tryDifferentSearch')}
           </p>
-        </motion.div>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 relative z-10 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 w-full">
           {filteredProducts.map((product, idx) => {
             const displayName = language === 'ar' ? product.name_ar : product.name_en;
             const secondaryName = language === 'ar' ? product.name_en : product.name_ar;
@@ -140,44 +121,41 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25 }}
-                className="liquid-glass-card p-4 flex flex-col justify-between group cursor-default w-full"
+                className="liquid-glass-card rounded-2xl overflow-hidden flex flex-col justify-between group w-full"
               >
-                {/* Specular glare reflection on each card */}
-                <div className="specular-glare opacity-30 pointer-events-none" />
-
                 {/* Top Image Container */}
-                <div className="w-full">
-                  <div className="w-full h-44 sm:h-48 rounded-xl bg-gradient-to-b from-[#F8FAFC] to-slate-100/60 border border-slate-100 p-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
+                <div className="p-3.5 pb-0 flex items-center justify-center w-full">
+                  <div className="w-full h-44 rounded-xl bg-slate-50 border border-slate-100 p-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
                     <img
                       src={product.image_url}
                       alt={displayName}
                       loading="lazy"
-                      className="w-full h-full object-contain filter drop-shadow-sm transform transition-transform duration-500 group-hover:scale-108"
+                      className="w-full h-full object-contain filter drop-shadow-sm transform transition-transform duration-300 group-hover:scale-105"
                     />
 
-                    {/* Category Tag with Liquid Meniscus */}
-                    <span className="absolute top-2.5 start-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur-md text-[#0F172A] border border-slate-200 shadow-xs">
+                    {/* Category Tag */}
+                    <span className="absolute top-2.5 start-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-white/90 backdrop-blur-md text-[#0F172A] border border-slate-200 shadow-xs">
                       {product.category || 'General'}
                     </span>
 
-                    {/* In Stock Badge with Pulse */}
-                    <span className="absolute top-2.5 end-2.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    {/* In Stock Badge */}
+                    <span className="absolute top-2.5 end-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       {t('catalog.inStock')}
                     </span>
                   </div>
                 </div>
 
                 {/* Body Content */}
-                <div className="mt-4 flex-1 flex flex-col justify-between">
+                <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
                     {/* Metallic Slate OEM Number (#64748B) */}
-                    <div className="text-[10px] font-mono font-semibold text-[#64748B] mb-1 tracking-wider">
+                    <div className="text-[10px] font-mono font-semibold text-[#64748B] mb-1">
                       {partNo}
                     </div>
 
                     {/* Midnight Navy Title (#0F172A) */}
-                    <h3 className="text-sm font-bold text-[#0F172A] leading-snug line-clamp-2 group-hover:text-[#F97316] transition-colors duration-200">
+                    <h3 className="text-sm font-bold text-[#0F172A] leading-snug line-clamp-2 group-hover:text-[#F97316] transition-colors">
                       {displayName}
                     </h3>
 
@@ -186,32 +164,28 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
                     </p>
                   </div>
 
-                  {/* Actions & Price with Fluid Animation */}
-                  <div className="mt-4 sm:mt-5 pt-3 sm:pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                  {/* Actions & Price */}
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                     
-                    {/* Inspect Details Button with Liquid Pill Hover */}
-                    <motion.button
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
+                    {/* Inspect Details Button */}
+                    <button
                       onClick={() => setActiveModalProduct(product)}
-                      className="flex-1 py-2 px-3 rounded-xl bg-slate-50 hover:bg-orange-50/50 border border-slate-200 hover:border-orange-200 text-[#0F172A] hover:text-[#F97316] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                      className="flex-1 py-1.5 px-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[#0F172A] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                     >
                       <Eye className="w-3.5 h-3.5 text-[#F97316]" />
                       <span>{t('catalog.detailsButton')}</span>
-                    </motion.button>
+                    </button>
 
-                    {/* WhatsApp Quick Order Button (Liquid Button) */}
-                    <motion.a
-                      whileHover={{ scale: 1.1, rotate: 3 }}
-                      whileTap={{ scale: 0.95 }}
+                    {/* WhatsApp Quick Order Button (Vibrant Orange Accent #F97316) */}
+                    <a
                       href={`https://wa.me/201000000000?text=${whatsappMessage}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-2.5 rounded-xl liquid-button flex items-center justify-center cursor-pointer shadow-md shadow-orange-500/20"
+                      className="p-2 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-[#F97316] transition-colors"
                       title={t('catalog.whatsappInquire')}
                     >
-                      <MessageCircle className="w-4 h-4 text-white" />
-                    </motion.a>
+                      <MessageCircle className="w-3.5 h-3.5" />
+                    </a>
 
                   </div>
                 </div>

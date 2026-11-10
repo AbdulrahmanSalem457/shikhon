@@ -114,7 +114,7 @@ const MainContent = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between w-full max-w-full overflow-x-hidden ${isRTL ? 'font-ar' : 'font-en'}`}>
+    <div className={`min-h-screen flex flex-col justify-between w-full max-w-[100vw] overflow-x-hidden ${isRTL ? 'font-ar' : 'font-en'}`}>
       <div className="w-full max-w-full overflow-x-hidden">
         <Navbar />
         <main className="w-full max-w-full overflow-x-hidden">
