@@ -213,53 +213,6 @@ export const LoginView = () => {
             </button>
           </div>
 
-          {/* Supabase URL & Key Expandable Config */}
-          <div className="mt-4 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowConfig(!showConfig)}
-              className="w-full text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-[11px] font-medium flex items-center justify-between cursor-pointer"
-            >
-              <span className="flex items-center gap-1.5">
-                <Database className="w-3 h-3 text-sky-600 dark:text-cyan-400" />
-                <span>{t('auth.supabaseConfig')}</span>
-              </span>
-              <ChevronDown className={`w-3.5 h-3.5 transform transition-transform ${showConfig ? 'rotate-180' : ''}`} />
-            </button>
-
-            {showConfig && (
-              <div className="mt-3 p-3 rounded-2xl liquid-pill space-y-2.5 text-xs">
-                <div>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-1">{t('auth.supabaseUrl')}</span>
-                  <input
-                    type="text"
-                    value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
-                    placeholder="https://xyz.supabase.co"
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-[11px]"
-                  />
-                </div>
-                <div>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block mb-1">{t('auth.supabaseKey')}</span>
-                  <input
-                    type="password"
-                    value={keyInput}
-                    onChange={(e) => setKeyInput(e.target.value)}
-                    placeholder="eyJhbGciOi..."
-                    className="w-full px-2.5 py-1.5 rounded-lg glass-input text-[11px]"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={handleSaveConfig}
-                  className="w-full py-1.5 rounded-lg bg-sky-500/15 text-sky-700 dark:bg-cyan-500/20 dark:text-cyan-300 font-semibold text-[11px] transition-colors cursor-pointer"
-                >
-                  {t('auth.saveConfig')}
-                </button>
-              </div>
-            )}
-          </div>
-
         </div>
 
         {/* Footnote */}
