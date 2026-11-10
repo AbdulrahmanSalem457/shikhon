@@ -108,7 +108,7 @@ const MainContent = () => {
   }, []);
 
   return (
-    <div className={`min-h-screen bg-[#F8FAFC] dark:bg-[#090D16] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col justify-between w-full max-w-[100vw] overflow-x-hidden transition-colors duration-200 ${isRTL ? 'font-ar' : 'font-en'}`}>
+    <div className={`min-h-screen bg-[#F8FAFC] dark:bg-[#090D16] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col justify-between w-full max-w-[100vw] overflow-x-hidden ${isRTL ? 'font-ar' : 'font-en'}`}>
       <div className="w-full max-w-full overflow-x-hidden bg-[#F8FAFC] dark:bg-[#090D16]">
         <Navbar />
         <main className="w-full max-w-full overflow-x-hidden">

@@ -25,9 +25,9 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-2.5 sm:px-6 lg:px-8 pt-2.5 sm:pt-4 transition-all duration-300 w-full max-w-full">
+    <header className="fixed top-0 left-0 right-0 z-50 px-2.5 sm:px-6 lg:px-8 pt-2.5 sm:pt-4 w-full max-w-full">
       <nav 
-        className={`w-full max-w-6xl mx-auto rounded-2xl px-3 sm:px-5 py-2.5 sm:py-3 transition-all duration-300 bg-[#0F172A] dark:bg-[#090D16]/95 dark:backdrop-blur-md border border-slate-800 dark:border-[#1E293B] text-white ${
+        className={`w-full max-w-6xl mx-auto rounded-2xl px-3 sm:px-5 py-2.5 sm:py-3 transition-[box-shadow] duration-200 bg-[#0F172A] dark:bg-[#090D16]/95 dark:backdrop-blur-md border border-slate-800 dark:border-[#1E293B] text-white ${
           scrolled 
             ? 'shadow-xl shadow-slate-950/20 border-slate-700' 
             : 'shadow-md shadow-slate-950/10'

@@ -7,7 +7,7 @@ export const Hero = ({ searchQuery, setSearchQuery }) => {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="relative pt-32 sm:pt-36 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#F8FAFC] dark:bg-[#090D16] transition-colors duration-250 w-full max-w-full">
+    <section className="relative pt-32 sm:pt-36 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#F8FAFC] dark:bg-[#090D16] w-full max-w-full">
       
       {/* Subtle Warm Automotive Ambient Glow (GPU Accelerated for Safari) */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] sm:w-[650px] max-w-full h-[280px] sm:h-[320px] bg-gradient-to-tr from-orange-400/10 via-amber-300/10 to-slate-200/40 dark:from-orange-500/10 dark:via-amber-500/5 dark:to-transparent rounded-full blur-[50px] sm:blur-[90px] pointer-events-none -z-10 transform-gpu" />

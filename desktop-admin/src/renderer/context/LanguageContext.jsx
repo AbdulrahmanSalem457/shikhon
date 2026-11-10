@@ -189,7 +189,29 @@ export const LanguageProvider = ({ children }) => {
   }, [language]);
 
   const toggleLanguage = () => {
+    const css = document.createElement('style');
+    css.type = 'text/css';
+    css.appendChild(
+      document.createTextNode(
+        `*, *::before, *::after {
+          -webkit-transition: none !important;
+          -moz-transition: none !important;
+          -o-transition: none !important;
+          -ms-transition: none !important;
+          transition: none !important;
+        }`
+      )
+    );
+    document.head.appendChild(css);
+
     setLanguage(prev => (prev === 'ar' ? 'en' : 'ar'));
+
+    window.requestAnimationFrame(() => {
+      void document.body.offsetHeight;
+      if (document.head.contains(css)) {
+        document.head.removeChild(css);
+      }
+    });
   };
 
   const isRTL = language === 'ar';
