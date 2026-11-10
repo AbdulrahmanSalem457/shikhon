@@ -9,8 +9,8 @@ export const Footer = () => {
   return (
     <footer id="about" className="relative mt-20 sm:mt-24 bg-[#0F172A] dark:bg-[#090D16] border-t border-slate-800 dark:border-[#1E293B] pt-12 sm:pt-16 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8 text-white w-full max-w-full overflow-hidden transition-colors">
       
-      {/* Subtle Warm Amber/Orange Ambient Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 max-w-full h-48 bg-orange-500/5 blur-[120px] pointer-events-none -z-10" />
+      {/* Subtle Warm Amber/Orange Ambient Glow (GPU Accelerated for Safari) */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 max-w-full h-48 bg-orange-500/5 blur-[50px] sm:blur-[90px] pointer-events-none -z-10 transform-gpu" />
 
       <div className="max-w-7xl mx-auto relative z-10 w-full">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 sm:mb-12">

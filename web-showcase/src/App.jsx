@@ -90,12 +90,7 @@ const MainContent = () => {
       console.log('[Web Showcase Realtime Sync Status]:', status);
     });
 
-    // 3. Silent Background Sync Interval (Every 3.5 seconds)
-    const pollInterval = setInterval(() => {
-      loadProducts(true);
-    }, 3500);
-
-    // 4. Tab Visibility & Focus Sync
+    // 3. Tab Visibility & Focus Sync (Sync when returning to tab)
     const handleSyncOnActive = () => {
       if (document.visibilityState === 'visible') {
         loadProducts(true);
@@ -106,7 +101,6 @@ const MainContent = () => {
     document.addEventListener('visibilitychange', handleSyncOnActive);
 
     return () => {
-      clearInterval(pollInterval);
       window.removeEventListener('focus', handleSyncOnActive);
       document.removeEventListener('visibilitychange', handleSyncOnActive);
       supabase.removeChannel(channel);

@@ -20,7 +20,14 @@
     color: #0F172A;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
     transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* iOS WebKit Smooth Momentum Scrolling */
+  .no-scrollbar {
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Dark Mode Body (#090D16 Deep Carbon Navy) */
