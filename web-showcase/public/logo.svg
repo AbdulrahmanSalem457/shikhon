@@ -1,34 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="shkAutoGradAdmin" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#38bdf8" />
       <stop offset="50%" stop-color="#0284c7" />
-      <stop offset="100%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#1e40af" />
     </linearGradient>
-    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.4)" />
-      <stop offset="100%" stop-color="rgba(255,255,255,0.05)" />
+    <linearGradient id="shkChromeAdmin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="50%" stop-color="#cbd5e1" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#64748b" stop-opacity="0.15" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
+    <linearGradient id="shkGlowAdmin" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#67e8f9" />
+    </linearGradient>
   </defs>
-  <!-- Background Glow Ring -->
-  <circle cx="50" cy="50" r="42" stroke="url(#grad1)" stroke-width="2.5" opacity="0.6" filter="url(#glow)"/>
-  <circle cx="50" cy="50" r="38" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-  <!-- Rotor / Gear Blades -->
-  <g transform="translate(50, 50)" stroke="url(#grad1)" stroke-width="3.5" stroke-linecap="round">
-    <path d="M0,-28 L0,-16" />
-    <path d="M20,-20 L11,-11" />
-    <path d="M28,0 L16,0" />
-    <path d="M20,20 L11,11" />
-    <path d="M0,28 L0,16" />
-    <path d="M-20,20 L-11,11" />
-    <path d="M-28,0 L-16,0" />
-    <path d="M-20,-20 L-11,-11" />
+
+  <!-- Precision Outer Rings -->
+  <circle cx="60" cy="60" r="54" stroke="url(#shkAutoGradAdmin)" stroke-width="3" opacity="0.4" stroke-dasharray="6 3" />
+  <circle cx="60" cy="60" r="49" stroke="url(#shkChromeAdmin)" stroke-width="2" opacity="0.7" />
+
+  <!-- Roofline & Windshield -->
+  <path d="M45,34 Q60,25 75,34 L82,46 Q60,43 38,46 Z" fill="url(#shkAutoGradAdmin)" opacity="0.85" />
+  <path d="M48,35 Q60,28 72,35 L77,44 Q60,42 43,44 Z" fill="#ffffff" opacity="0.3" />
+
+  <!-- Supercar Muscular Body -->
+  <path d="M20,58 C20,48 30,46 38,46 L82,46 C90,46 100,48 100,58 C100,66 96,74 92,78 L86,84 C80,88 68,90 60,90 C52,90 40,88 34,84 L28,78 C24,74 20,66 20,58 Z" stroke="url(#shkAutoGradAdmin)" stroke-width="3.5" stroke-linejoin="round" />
+
+  <!-- Hood Aerodynamic Sculpt Lines -->
+  <path d="M42,47 L48,68" stroke="url(#shkChromeAdmin)" stroke-width="2" stroke-linecap="round" />
+  <path d="M78,47 L72,68" stroke="url(#shkChromeAdmin)" stroke-width="2" stroke-linecap="round" />
+  <path d="M60,45 L60,65" stroke="url(#shkAutoGradAdmin)" stroke-width="1.8" stroke-linecap="round" opacity="0.7" />
+
+  <!-- Aggressive LED Matrix Headlights -->
+  <path d="M25,58 L39,63 L36,66 L23,61 Z" fill="url(#shkGlowAdmin)" />
+  <path d="M95,58 L81,63 L84,66 L97,61 Z" fill="url(#shkGlowAdmin)" />
+
+  <!-- Front Intercooler Grille -->
+  <path d="M40,72 L80,72 L76,84 L44,84 Z" fill="url(#shkAutoGradAdmin)" opacity="0.2" />
+  <path d="M40,72 L80,72 L76,84 L44,84 Z" stroke="url(#shkAutoGradAdmin)" stroke-width="1.8" />
+
+  <!-- Center Engine Piston (Auto Parts Icon) -->
+  <g transform="translate(60, 77)">
+    <rect x="-6" y="-4" width="12" height="6" rx="1.5" fill="url(#shkChromeAdmin)" />
+    <line x1="-5" y1="-2" x2="5" y2="-2" stroke="#0284c7" stroke-width="1" />
+    <path d="M-2,2 L-2,7 L2,7 L2,2 Z" fill="url(#shkAutoGradAdmin)" />
   </g>
-  <!-- Center Core -->
-  <circle cx="50" cy="50" r="10" fill="url(#grad1)" />
-  <circle cx="47" cy="47" r="4" fill="white" opacity="0.6" />
+
+  <!-- Aerodynamic Carbon Splitter -->
+  <path d="M16,86 Q60,94 104,86 L102,90 Q60,98 18,90 Z" fill="url(#shkAutoGradAdmin)" />
+  
+  <!-- Side Velocity Speed Fins -->
+  <path d="M12,52 L18,50" stroke="url(#shkAutoGradAdmin)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+  <path d="M10,60 L16,60" stroke="url(#shkAutoGradAdmin)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+  <path d="M12,68 L18,70" stroke="url(#shkAutoGradAdmin)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+
+  <path d="M108,52 L102,50" stroke="url(#shkAutoGradAdmin)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+  <path d="M110,60 L104,60" stroke="url(#shkAutoGradAdmin)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+  <path d="M108,68 L102,70" stroke="url(#shkAutoGradAdmin)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
 </svg>

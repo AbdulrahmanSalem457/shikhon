@@ -5,6 +5,7 @@ const fs = require('fs');
 let mainWindow;
 
 function createWindow() {
+  const iconPath = path.join(__dirname, 'icon.ico');
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 850,
@@ -12,6 +13,7 @@ function createWindow() {
     minHeight: 700,
     backgroundColor: '#070b14',
     title: 'Shikhon Admin | شيخون لوحة التحكم',
+    icon: fs.existsSync(iconPath) ? iconPath : undefined,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
