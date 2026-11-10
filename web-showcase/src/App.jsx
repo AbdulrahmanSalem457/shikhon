@@ -6,6 +6,7 @@ import { Hero } from './components/Hero';
 import { ProductCatalog } from './components/ProductCatalog';
 import { Footer } from './components/Footer';
 import { supabase, isSupabaseConfigured, FALLBACK_PRODUCTS } from './lib/supabase';
+import { getProductsApi } from './api/productsApi';
 
 const MainContent = () => {
   const [products, setProducts] = useState([]);
@@ -14,24 +15,16 @@ const MainContent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { isRTL } = useLanguage();
 
-  // Load products from Supabase
+  // Load products via Supabase REST API (GET /rest/v1/products)
   const loadProducts = async () => {
     try {
       setLoading(true);
-      const { data, error: sbError } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (sbError) {
-        console.warn('Supabase fetch error:', sbError.message);
-        setError(sbError.message);
-      } else {
-        setProducts(data || []);
-        setError(null);
-      }
+      const data = await getProductsApi();
+      setProducts(data || []);
+      setError(null);
     } catch (err) {
-      console.warn('Network or Supabase error:', err);
+      console.warn('API fetch error:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { uploadImageToStorage, supabase } from '../lib/supabase';
+import { uploadImageApi } from '../api/storageApi';
+import { createProductApi } from '../api/productsApi';
 import { 
   X, 
   UploadCloud, 
@@ -99,14 +100,14 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
       setLoading(true);
       let finalImageUrl = imagePreview;
 
-      // Upload image to Supabase Storage if file exists
+      // Upload image via POST /storage/v1/object/product-images/{filename} API
       if (imageFile) {
         setStatusMessage(t('form.uploadingImage'));
-        const uploadRes = await uploadImageToStorage(imageFile);
-        finalImageUrl = typeof uploadRes === 'string' ? uploadRes : (uploadRes?.publicUrl || String(uploadRes));
+        const uploadResult = await uploadImageApi(imageFile);
+        finalImageUrl = uploadResult.publicUrl;
       }
 
-      // Insert record to Supabase
+      // Create product via POST /rest/v1/products API
       setStatusMessage(t('form.savingProduct'));
       const productPayload = {
         name_ar: nameAr.trim(),
@@ -118,15 +119,9 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
         in_stock: true
       };
 
-      const { data, error } = await supabase
-        .from('products')
-        .insert([productPayload])
-        .select()
-        .single();
+      const newProduct = await createProductApi(productPayload);
 
-      if (error) throw error;
-
-      onProductAdded(data);
+      onProductAdded(newProduct);
       onClose();
     } catch (err) {
       console.error('Error saving product:', err);

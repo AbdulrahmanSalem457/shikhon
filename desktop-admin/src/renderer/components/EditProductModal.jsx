@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { uploadImageToStorage, supabase } from '../lib/supabase';
+import { uploadImageApi } from '../api/storageApi';
+import { updateProductApi } from '../api/productsApi';
 import { X, UploadCloud, Check, AlertCircle, ArrowLeftRight, Loader2 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -54,14 +55,10 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
       setLoading(true);
       let updatedImageUrl = product.image_url;
 
-      // If user selected a new image file
+      // If user selected a new image file, upload via Storage API
       if (imageFile) {
-        if (supabase) {
-          const uploadRes = await uploadImageToStorage(imageFile);
-          updatedImageUrl = typeof uploadRes === 'string' ? uploadRes : (uploadRes?.publicUrl || String(uploadRes));
-        } else {
-          updatedImageUrl = imagePreview;
-        }
+        const uploadRes = await uploadImageApi(imageFile);
+        updatedImageUrl = uploadRes.publicUrl;
       }
 
       const updatedFields = {
@@ -73,20 +70,9 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
         price: price ? parseFloat(price) : null,
       };
 
-      if (supabase) {
-        const { data, error } = await supabase
-          .from('products')
-          .update(updatedFields)
-          .eq('id', product.id)
-          .select()
-          .single();
-
-        if (error) throw error;
-        onProductUpdated(data);
-      } else {
-        onProductUpdated({ ...product, ...updatedFields });
-      }
-
+      // Call PATCH /rest/v1/products?id=eq.{id} API
+      const updatedProduct = await updateProductApi(product.id, updatedFields);
+      onProductUpdated(updatedProduct);
       onClose();
     } catch (err) {
       console.error('Update error:', err);

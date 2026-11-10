@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import { supabase, deleteImageFromStorage } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
+import { getProductsApi, deleteProductApi } from '../api/productsApi';
+import { deleteImageApi } from '../api/storageApi';
 import { AddProductModal } from './AddProductModal';
 import { EditProductModal } from './EditProductModal';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
@@ -33,26 +35,14 @@ export const DashboardView = () => {
   const [deletingProduct, setDeletingProduct] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // Fetch products from Supabase
+  // Fetch products via GET /rest/v1/products API
   const fetchProducts = async () => {
-    if (!supabase) {
-      return;
-    }
-
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.warn('Error fetching products:', error);
-      } else {
-        setProducts(data || []);
-      }
+      const data = await getProductsApi();
+      setProducts(data || []);
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.error('[API Fetch Error]:', err);
     } finally {
       setLoading(false);
     }
@@ -72,31 +62,26 @@ export const DashboardView = () => {
     setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)));
   };
 
-  // Product Delete Handler
+  // Product Delete Handler via DELETE /rest/v1/products API
   const confirmDelete = async () => {
     if (!deletingProduct) return;
 
     try {
       setDeleteLoading(true);
 
-      if (supabase) {
-        const { error } = await supabase
-          .from('products')
-          .delete()
-          .eq('id', deletingProduct.id);
+      // Call DELETE /rest/v1/products?id=eq.{id}
+      await deleteProductApi(deletingProduct.id);
 
-        if (error) throw error;
-
-        if (deletingProduct.image_url) {
-          await deleteImageFromStorage(deletingProduct.image_url);
-        }
+      // Call DELETE /storage/v1/object/product-images/{filename}
+      if (deletingProduct.image_url) {
+        await deleteImageApi(deletingProduct.image_url);
       }
 
       setProducts(prev => prev.filter(p => p.id !== deletingProduct.id));
       setDeletingProduct(null);
     } catch (err) {
-      console.error('Delete error:', err);
-      alert(err.message || 'Error deleting product');
+      console.error('[API Delete Error]:', err);
+      alert(err.message || 'Error deleting product via API');
     } finally {
       setDeleteLoading(false);
     }
