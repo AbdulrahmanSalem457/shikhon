@@ -30,11 +30,7 @@ export const BrandLogo = ({ className = "w-8 h-8" }) => {
         </linearGradient>
       </defs>
 
-      {/* 1. Precision Automotive Shield & Tachometer Ring */}
-      <circle cx="60" cy="60" r="54" stroke="url(#shkAutoGradAdmin)" strokeWidth="2.5" opacity="0.35" strokeDasharray="6 3" />
-      <circle cx="60" cy="60" r="49" stroke="url(#shkChromeAdmin)" strokeWidth="1.5" opacity="0.6" />
-
-      {/* 2. Aerodynamic GT Supercar Silhouette */}
+      {/* 2. Aerodynamic GT Supercar Silhouette (Pure Car without outer frames/rings) */}
       {/* Roofline & Windshield */}
       <path 
         d="M45,34 Q60,25 75,34 L82,46 Q60,43 38,46 Z" 
