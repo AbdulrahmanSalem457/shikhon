@@ -14,7 +14,7 @@ function createWindow() {
     height: 850,
     minWidth: 1024,
     minHeight: 700,
-    backgroundColor: '#070b14',
+    backgroundColor: '#F8FAFC',
     title: 'Shikhon Admin | شيخون لوحة التحكم',
     icon: chosenIcon,
     webPreferences: {

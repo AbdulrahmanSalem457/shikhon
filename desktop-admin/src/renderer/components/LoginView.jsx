@@ -62,16 +62,11 @@ export const LoginView = () => {
     }
   };
 
-  const handleSaveConfig = () => {
-    reinitializeSupabase(urlInput, keyInput);
-    setShowConfig(false);
-  };
-
   return (
-    <div className="min-h-[calc(100vh-65px)] flex items-center justify-center p-4 relative overflow-hidden transition-colors">
+    <div className="min-h-[calc(100vh-65px)] flex items-center justify-center p-4 relative overflow-hidden bg-[#F8FAFC]">
       
-      {/* Background Calm Ambient Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-sky-400/10 via-blue-400/10 to-indigo-400/10 dark:from-cyan-600/20 dark:via-blue-600/20 dark:to-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+      {/* Background Soft Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-orange-100 via-slate-100 to-amber-50 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10 my-8">
         
@@ -80,26 +75,26 @@ export const LoginView = () => {
           <div className="h-24 mx-auto flex items-center justify-center p-1 mb-3">
             <BrandLogo className="h-24 w-auto max-w-[260px]" />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-3xl font-black text-[#0F172A] tracking-tight">
             {t('brand.name')}
           </h1>
-          <p className="text-xs uppercase tracking-widest font-bold text-sky-600 dark:text-cyan-300 mt-1">
+          <p className="text-xs uppercase tracking-widest font-bold text-[#F97316] mt-1">
             {t('brand.adminTitle')}
           </p>
         </div>
 
-        {/* Login Liquid Glass Card */}
-        <div className="liquid-glass rounded-3xl p-6 sm:p-8 shadow-xl relative">
+        {/* Login White Card */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 relative">
           
           {/* Mode Switcher: Sign In vs Sign Up */}
-          <div className="flex p-1 rounded-2xl liquid-pill mb-6">
+          <div className="flex p-1 rounded-2xl bg-[#F8FAFC] border border-slate-200 mb-6">
             <button
               type="button"
               onClick={() => { setMode('signin'); setErrorMsg(''); setSuccessMsg(''); }}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 mode === 'signin'
-                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-sm'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
               <LogIn className="w-3.5 h-3.5" />
@@ -111,8 +106,8 @@ export const LoginView = () => {
               onClick={() => { setMode('signup'); setErrorMsg(''); setSuccessMsg(''); }}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 mode === 'signup'
-                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sm'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-sm'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -121,12 +116,12 @@ export const LoginView = () => {
           </div>
 
           <div className="mb-5">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">
+            <h2 className="text-base font-bold text-[#0F172A]">
               {mode === 'signin' 
                 ? (language === 'ar' ? 'تسجيل دخول المشرف' : 'Admin Sign In')
                 : (language === 'ar' ? 'إنشاء حساب مشرف جديد في Supabase' : 'Create New Supabase Admin Account')}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[#64748B] mt-0.5">
               {mode === 'signin'
                 ? t('auth.subtitle')
                 : (language === 'ar' ? 'أدخل بريدك وكلمة المرور لإنشاء حسابك فوراً' : 'Enter your email & password to register')}
@@ -135,7 +130,7 @@ export const LoginView = () => {
 
           {/* Success Banner */}
           {successMsg && (
-            <div className="mb-4 p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
               <Check className="w-4 h-4 shrink-0" />
               <span>{successMsg}</span>
             </div>
@@ -143,7 +138,7 @@ export const LoginView = () => {
 
           {/* Error Banner */}
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-2xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -153,29 +148,29 @@ export const LoginView = () => {
             
             {/* Email Field */}
             <div>
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
                 {t('auth.email')}
               </label>
               <div className="relative">
-                <Mail className={`w-4 h-4 text-slate-400 absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3.5' : 'left-3.5'}`} />
+                <Mail className={`w-4 h-4 text-[#64748B] absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3.5' : 'left-3.5'}`} />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@shikhon-parts.com"
-                  className={`w-full py-2.5 rounded-xl glass-input text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
+                  className={`w-full py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+              <label className="text-xs font-semibold text-[#0F172A] block mb-1.5">
                 {t('auth.password')}
               </label>
               <div className="relative">
-                <Lock className={`w-4 h-4 text-slate-400 absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3.5' : 'left-3.5'}`} />
+                <Lock className={`w-4 h-4 text-[#64748B] absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3.5' : 'left-3.5'}`} />
                 <input
                   type="password"
                   required
@@ -183,7 +178,7 @@ export const LoginView = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full py-2.5 rounded-xl glass-input text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
+                  className={`w-full py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 text-xs ${isRTL ? 'pr-10 pl-3.5' : 'pl-10 pr-3.5'}`}
                 />
               </div>
             </div>
@@ -192,7 +187,7 @@ export const LoginView = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition-all duration-200 disabled:opacity-50 cursor-pointer"
+              className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white font-bold text-xs shadow-md shadow-orange-500/25 transition-all duration-200 disabled:opacity-50 cursor-pointer"
             >
               {loading 
                 ? (mode === 'signup' ? 'جاري إنشاء الحساب...' : t('auth.loggingIn'))
@@ -202,13 +197,13 @@ export const LoginView = () => {
           </form>
 
           {/* Quick Demo Access Mode */}
-          <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10 text-center">
+          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <button
               type="button"
               onClick={loginAsDemo}
-              className="w-full py-2 px-3 rounded-xl liquid-pill text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2 px-3 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#0F172A] hover:bg-slate-100 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 text-[#F97316]" />
               <span>{t('auth.demoLogin')}</span>
             </button>
           </div>
@@ -216,7 +211,7 @@ export const LoginView = () => {
         </div>
 
         {/* Footnote */}
-        <p className="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-6">
+        <p className="text-center text-[11px] text-[#64748B] mt-6">
           Shikhon Automotive Spare Parts Platform • Supabase Auth
         </p>
 

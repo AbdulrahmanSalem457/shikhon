@@ -35,24 +35,24 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
   });
 
   return (
-    <section id="catalog" className="relative py-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <section id="catalog" className="relative py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       
-      {/* Header */}
+      {/* Header (Midnight Navy #0F172A) */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-sky-600 dark:text-cyan-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#F97316] animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#F97316]">
               {t('catalog.title')}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+          <h2 className="text-xl sm:text-2xl font-black text-[#0F172A]">
             {t('catalog.subtitle')}
           </h2>
         </div>
 
         {/* Counter Badge */}
-        <div className="liquid-pill px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 self-start md:self-auto">
+        <div className="bg-white border border-slate-200 px-3.5 py-1.5 rounded-full text-xs font-bold text-[#0F172A] shadow-sm self-start md:self-auto">
           {t('catalog.resultsCount', { count: filteredProducts.length })}
         </div>
       </div>
@@ -67,10 +67,10 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
                 isSelected
-                  ? 'bg-sky-500 dark:bg-cyan-500 text-white shadow-sm'
-                  : 'liquid-pill text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-md shadow-orange-500/20'
+                  : 'bg-white border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:border-orange-300 shadow-sm'
               }`}
             >
               {label}
@@ -83,22 +83,22 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {[...Array(4)].map((_, idx) => (
-            <div key={idx} className="h-72 rounded-2xl liquid-glass animate-pulse p-4 flex flex-col justify-between">
-              <div className="w-full h-36 rounded-xl bg-slate-200/50 dark:bg-white/5" />
+            <div key={idx} className="h-72 rounded-2xl bg-white border border-slate-200 animate-pulse p-4 flex flex-col justify-between shadow-sm">
+              <div className="w-full h-36 rounded-xl bg-slate-100" />
               <div className="space-y-2">
-                <div className="h-3.5 bg-slate-200/60 dark:bg-white/10 rounded-full w-3/4" />
-                <div className="h-2.5 bg-slate-200/40 dark:bg-white/5 rounded-full w-1/2" />
+                <div className="h-3.5 bg-slate-200 rounded-full w-3/4" />
+                <div className="h-2.5 bg-slate-100 rounded-full w-1/2" />
               </div>
             </div>
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="text-center py-16 px-4 rounded-3xl liquid-glass max-w-md mx-auto">
+        <div className="text-center py-16 px-4 rounded-3xl bg-white border border-slate-200 shadow-sm max-w-md mx-auto">
           <AlertCircle className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-slate-800 dark:text-white mb-1">
+          <h3 className="text-base font-bold text-[#0F172A] mb-1">
             {t('catalog.noProductsFound')}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-[#64748B]">
             {t('catalog.tryDifferentSearch')}
           </p>
         </div>
@@ -123,11 +123,9 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
                 className="liquid-glass-card rounded-2xl overflow-hidden flex flex-col justify-between group"
               >
-                <div className="specular-glare" />
-
                 {/* Top Image Container */}
                 <div className="p-3.5 pb-0 flex items-center justify-center">
-                  <div className="w-full h-44 rounded-xl bg-slate-100 dark:bg-slate-950/60 p-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
+                  <div className="w-full h-44 rounded-xl bg-slate-50 border border-slate-100 p-3 flex items-center justify-center relative overflow-hidden transition-all duration-300">
                     <img
                       src={product.image_url}
                       alt={displayName}
@@ -136,12 +134,12 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
                     />
 
                     {/* Category Tag */}
-                    <span className="absolute top-2.5 start-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-white/80 dark:bg-black/60 backdrop-blur-md text-sky-700 dark:text-cyan-300 border border-slate-200/50 dark:border-white/10">
+                    <span className="absolute top-2.5 start-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-white/90 backdrop-blur-md text-[#0F172A] border border-slate-200 shadow-xs">
                       {product.category || 'General'}
                     </span>
 
                     {/* In Stock Badge */}
-                    <span className="absolute top-2.5 end-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40">
+                    <span className="absolute top-2.5 end-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       {t('catalog.inStock')}
                     </span>
@@ -151,37 +149,39 @@ export const ProductCatalog = ({ products, loading, error, searchQuery }) => {
                 {/* Body Content */}
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 mb-1">
+                    {/* Metallic Slate OEM Number (#64748B) */}
+                    <div className="text-[10px] font-mono font-semibold text-[#64748B] mb-1">
                       {partNo}
                     </div>
 
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 group-hover:text-sky-600 dark:group-hover:text-cyan-300 transition-colors">
+                    {/* Midnight Navy Title (#0F172A) */}
+                    <h3 className="text-sm font-bold text-[#0F172A] leading-snug line-clamp-2 group-hover:text-[#F97316] transition-colors">
                       {displayName}
                     </h3>
 
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5 font-medium">
+                    <p className="text-xs text-[#64748B] line-clamp-1 mt-0.5 font-medium">
                       {secondaryName}
                     </p>
                   </div>
 
                   {/* Actions & Price */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/10 flex items-center justify-between gap-2">
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                     
                     {/* Inspect Details Button */}
                     <button
                       onClick={() => setActiveModalProduct(product)}
-                      className="flex-1 py-1.5 px-2.5 rounded-xl liquid-pill hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
+                      className="flex-1 py-1.5 px-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[#0F172A] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                     >
-                      <Eye className="w-3.5 h-3.5 text-sky-600 dark:text-cyan-400" />
+                      <Eye className="w-3.5 h-3.5 text-[#F97316]" />
                       <span>{t('catalog.detailsButton')}</span>
                     </button>
 
-                    {/* WhatsApp Quick Order */}
+                    {/* WhatsApp Quick Order Button (Vibrant Orange Accent #F97316) */}
                     <a
                       href={`https://wa.me/201000000000?text=${whatsappMessage}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25 text-emerald-600 dark:text-emerald-300 transition-colors"
+                      className="p-2 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-[#F97316] transition-colors"
                       title={t('catalog.whatsappInquire')}
                     >
                       <MessageCircle className="w-3.5 h-3.5" />

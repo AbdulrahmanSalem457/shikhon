@@ -7,12 +7,12 @@ export const Footer = () => {
   const { t, language } = useLanguage();
 
   return (
-    <footer id="about" className="relative mt-24 border-t border-slate-200/80 dark:border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden transition-colors">
+    <footer id="about" className="relative mt-24 bg-[#0F172A] border-t border-slate-800 pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-white">
       
-      {/* Background Soft Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-48 bg-sky-500/5 dark:bg-cyan-600/10 blur-[100px] pointer-events-none" />
+      {/* Subtle Warm Amber/Orange Ambient Glow */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-48 bg-orange-500/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           
           {/* Brand Info */}
@@ -21,17 +21,17 @@ export const Footer = () => {
               <div className="h-12 flex items-center justify-start">
                 <BrandLogo className="h-12 w-auto max-w-[190px]" />
               </div>
-              <span className="text-2xl font-black text-slate-800 dark:text-white">
+              <span className="text-2xl font-black text-white">
                 {t('brand.fullName')}
               </span>
             </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
+            <p className="text-sm text-[#94A3B8] max-w-md leading-relaxed">
               {t('footer.description')}
             </p>
 
             {/* Quality & Trust Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold liquid-pill text-slate-700 dark:text-slate-300">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#F97316]" />
               <span>
                 {language === 'ar' ? 'قطع غيار معتمدة 100% وأصلية' : '100% Certified OEM Quality'}
               </span>
@@ -39,43 +39,41 @@ export const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-cyan-300 mb-4">
-              {t('footer.quickLinks')}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F97316]">
+              {t('nav.categories')}
             </h4>
-            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-              <li><a href="#catalog" className="hover:text-sky-600 dark:hover:text-white transition-colors">{t('nav.catalog')}</a></li>
-              <li><a href="#categories" className="hover:text-sky-600 dark:hover:text-white transition-colors">{t('nav.categories')}</a></li>
-              <li><a href="#about" className="hover:text-sky-600 dark:hover:text-white transition-colors">{t('nav.about')}</a></li>
+            <ul className="space-y-2 text-xs font-medium text-[#94A3B8]">
+              <li><a href="#categories" className="hover:text-white transition-colors">Brakes & Rotors</a></li>
+              <li><a href="#categories" className="hover:text-white transition-colors">Engine Components</a></li>
+              <li><a href="#categories" className="hover:text-white transition-colors">Suspension & Steering</a></li>
+              <li><a href="#categories" className="hover:text-white transition-colors">Electrical & Ignition</a></li>
             </ul>
           </div>
 
-          {/* Trust & Guarantee */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-cyan-300 mb-4">
-              {language === 'ar' ? 'ضمان وأصالة' : '100% Guarantee'}
+          {/* Engineering & Trust */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F97316]">
+              {t('footer.trustTitle')}
             </h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              {language === 'ar' 
-                ? 'جميع قطع الغيار مطابقة للمواصفات القياسية ومعتمدة للاستخدام الفوري لجميع الموديلات.' 
-                : 'All spare parts meet strict international manufacturing standards and are verified ready for immediate installation.'}
+            <p className="text-xs text-[#94A3B8] leading-relaxed">
+              {t('footer.trustDescription')}
             </p>
-            <div className="mt-3 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>{language === 'ar' ? 'مركز قطع غيار معتمد' : 'Certified Automotive Store'}</span>
+            <div className="text-[11px] font-mono text-slate-400">
+              Cairo, Egypt • Instant Logistics
             </div>
           </div>
 
         </div>
 
-        {/* Bottom Credits */}
-        <div className="pt-8 border-t border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 dark:text-slate-500">
-          <div>
-            {t('footer.rights')}
-          </div>
+        {/* Bottom Copyright Bar */}
+        <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
           <div className="flex items-center gap-2">
-            <span>{t('footer.poweredBy')}</span>
-            <Sparkles className="w-3.5 h-3.5 text-sky-500 dark:text-cyan-400" />
+            <span>© {new Date().getFullYear()} شيخون (Shikhon).</span>
+            <span>{t('footer.allRightsReserved')}</span>
+          </div>
+          <div className="flex items-center gap-4 text-[11px]">
+            <span className="text-slate-400">High Reliability Auto Parts Showcase</span>
           </div>
         </div>
 
