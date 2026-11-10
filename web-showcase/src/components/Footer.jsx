@@ -2,15 +2,23 @@ import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { BrandLogo } from './BrandLogo';
 import { ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const Footer = () => {
   const { t, language } = useLanguage();
 
   return (
-    <footer id="about" className="relative mt-24 bg-[#0F172A] border-t border-slate-800 pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-white">
+    <footer id="about" className="relative mt-24 bg-[#0F172A] border-t border-slate-800 pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-white overflow-hidden">
       
-      {/* Subtle Warm Amber/Orange Ambient Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-48 bg-orange-500/5 blur-[120px] pointer-events-none" />
+      {/* Dynamic Liquid Water Glow in the Footer */}
+      <div 
+        className="liquid-blob w-[500px] h-[300px] -bottom-20 left-1/3 bg-orange-500/10 pointer-events-none"
+        style={{ animationDuration: '20s' }}
+      />
+      <div 
+        className="liquid-blob w-[400px] h-[300px] -bottom-10 right-10 bg-blue-500/5 pointer-events-none"
+        style={{ animationDuration: '25s', animationDelay: '-6s' }}
+      />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
@@ -18,9 +26,13 @@ export const Footer = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="h-12 flex items-center justify-start">
-                <BrandLogo className="h-12 w-auto max-w-[190px]" />
-              </div>
+              <motion.div 
+                animate={{ y: [0, -3, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="h-12 flex items-center justify-start"
+              >
+                <BrandLogo className="h-12 w-auto max-w-[190px] filter drop-shadow-[0_2px_12px_rgba(249,115,22,0.3)]" />
+              </motion.div>
               <span className="text-2xl font-black text-white">
                 {t('brand.fullName')}
               </span>
@@ -29,25 +41,28 @@ export const Footer = () => {
               {t('footer.description')}
             </p>
 
-            {/* Quality & Trust Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#F97316]" />
+            {/* Quality & Trust Badge with Liquid Meniscus */}
+            <motion.div 
+              whileHover={{ scale: 1.03 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-slate-900/90 border border-slate-800 text-slate-300 shadow-inner cursor-default"
+            >
+              <CheckCircle2 className="w-4 h-4 text-[#F97316]" />
               <span>
                 {language === 'ar' ? 'قطع غيار معتمدة 100% وأصلية' : '100% Certified OEM Quality'}
               </span>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links with Hover Animation */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-[#F97316]">
               {t('nav.categories')}
             </h4>
             <ul className="space-y-2 text-xs font-medium text-[#94A3B8]">
-              <li><a href="#categories" className="hover:text-white transition-colors">Brakes & Rotors</a></li>
-              <li><a href="#categories" className="hover:text-white transition-colors">Engine Components</a></li>
-              <li><a href="#categories" className="hover:text-white transition-colors">Suspension & Steering</a></li>
-              <li><a href="#categories" className="hover:text-white transition-colors">Electrical & Ignition</a></li>
+              <li><a href="#categories" className="hover:text-orange-400 hover:translate-x-1 inline-block transition-all duration-200">Brakes & Rotors</a></li>
+              <li><a href="#categories" className="hover:text-orange-400 hover:translate-x-1 inline-block transition-all duration-200">Engine Components</a></li>
+              <li><a href="#categories" className="hover:text-orange-400 hover:translate-x-1 inline-block transition-all duration-200">Suspension & Steering</a></li>
+              <li><a href="#categories" className="hover:text-orange-400 hover:translate-x-1 inline-block transition-all duration-200">Electrical & Ignition</a></li>
             </ul>
           </div>
 

@@ -10,6 +10,7 @@ import {
   ArrowLeftRight, 
   Loader2 
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIES = [
   'Brakes',
@@ -103,7 +104,6 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
     if (file) processFile(file);
   };
 
-  // Quick Copy between Arabic & English fields
   const copyArToEn = () => {
     if (nameAr) setNameEn(nameAr);
   };
@@ -131,12 +131,12 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
     try {
       setLoading(true);
 
-      // STEP 1: Upload Image to Supabase Storage Bucket via REST API
+      // Upload Image
       setStatusMessage(t('form.uploadingImage'));
       const uploadRes = await uploadImageApi(imageFile);
       const publicImageUrl = uploadRes.publicUrl;
 
-      // STEP 2: Insert Record via Supabase REST API (POST /rest/v1/products)
+      // Insert Record
       setStatusMessage(t('form.savingProduct'));
       const productPayload = {
         name_ar: nameAr.trim(),
@@ -150,7 +150,6 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
 
       const newProduct = await createProductApi(productPayload);
 
-      // Inform parent dashboard
       onProductAdded(newProduct);
       handleClose();
 
@@ -164,34 +163,49 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/60 backdrop-blur-md overflow-y-auto">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 25 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 25 }}
+        transition={{ type: "spring", damping: 25, stiffness: 350 }}
+        className="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 overflow-hidden"
+      >
+        <div className="specular-glare opacity-30 pointer-events-none" />
+
         {/* Close Button */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
           onClick={handleClose}
-          className="absolute top-5 end-5 p-1.5 rounded-full bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 cursor-pointer transition-colors"
+          className="absolute top-5 end-5 p-1.5 rounded-full liquid-pill text-[#64748B] hover:text-[#0F172A] cursor-pointer transition-colors z-20"
         >
           <X className="w-5 h-5" />
-        </button>
+        </motion.button>
 
         {/* Modal Title */}
-        <h2 className="text-xl font-black text-[#0F172A] mb-1">
-          {t('form.addNewTitle')}
-        </h2>
-        <p className="text-xs text-[#64748B] mb-6">
-          {t('dashboard.subtitle')}
-        </p>
+        <div className="relative z-10">
+          <h2 className="text-xl font-black text-[#0F172A] mb-1">
+            {t('form.addNewTitle')}
+          </h2>
+          <p className="text-xs text-[#64748B] mb-6">
+            {t('dashboard.subtitle')}
+          </p>
+        </div>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 relative z-10"
+          >
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
-          </div>
+          </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
           
           {/* Drag & Drop Image Upload Zone */}
           <div>
@@ -204,10 +218,10 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer p-5 flex flex-col items-center justify-center text-center ${
+              className={`relative rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer p-5 flex flex-col items-center justify-center text-center ${
                 isDragging
-                  ? 'border-[#F97316] bg-orange-50'
-                  : 'border-slate-300 hover:border-[#F97316] bg-[#F8FAFC] hover:bg-orange-50/30'
+                  ? 'border-[#F97316] bg-orange-50 shadow-inner'
+                  : 'border-slate-300 hover:border-[#F97316] bg-[#F8FAFC] hover:bg-orange-50/20'
               }`}
             >
               <input
@@ -225,7 +239,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                     alt="Preview"
                     className="max-h-40 object-contain rounded-xl shadow-sm"
                   />
-                  <div className="absolute inset-0 bg-[#0F172A]/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-xl transition-opacity text-xs font-bold text-white">
+                  <div className="absolute inset-0 bg-[#0F172A]/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-xl transition-opacity text-xs font-bold text-white backdrop-blur-xs">
                     {t('form.replaceImageText')}
                   </div>
                 </div>
@@ -271,7 +285,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={nameAr}
                 onChange={(e) => setNameAr(e.target.value)}
                 placeholder={t('form.nameArPlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
               />
             </div>
 
@@ -298,7 +312,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
                 placeholder={t('form.nameEnPlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
               />
             </div>
 
@@ -315,7 +329,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3 py-2.5 rounded-xl glass-input text-xs"
               >
                 {CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>
@@ -335,7 +349,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={partNumber}
                 onChange={(e) => setPartNumber(e.target.value)}
                 placeholder="BRM-9942-X"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs font-mono text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-mono"
               />
             </div>
 
@@ -351,7 +365,7 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="199.99"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
               />
             </div>
 
@@ -369,29 +383,33 @@ export const AddProductModal = ({ isOpen, onClose, onProductAdded, isDemo }) => 
             </div>
 
             <div className="flex gap-2">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 type="button"
                 onClick={handleClose}
                 disabled={loading}
-                className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 text-xs font-semibold cursor-pointer transition-colors"
+                className="px-4 py-2.5 rounded-xl liquid-pill text-[#64748B] hover:text-[#0F172A] text-xs font-semibold cursor-pointer"
               >
                 {t('form.cancelBtn')}
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white text-xs font-bold shadow-md shadow-orange-500/25 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer transition-all"
+                className="px-6 py-2.5 rounded-xl liquid-button text-xs font-bold disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shadow-lg shadow-orange-500/25"
               >
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 text-white" />
                 <span>{t('form.saveBtn')}</span>
-              </button>
+              </motion.button>
             </div>
           </div>
 
         </form>
 
-      </div>
+      </motion.div>
     </div>
   );
 };

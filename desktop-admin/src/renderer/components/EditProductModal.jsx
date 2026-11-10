@@ -3,6 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { uploadImageApi } from '../api/storageApi';
 import { updateProductApi } from '../api/productsApi';
 import { X, UploadCloud, Check, AlertCircle, ArrowLeftRight, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIES = [
   'Brakes',
@@ -69,7 +70,6 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
       setLoading(true);
       let updatedImageUrl = product.image_url;
 
-      // If user selected a new image file, upload via Storage API
       if (imageFile) {
         const uploadRes = await uploadImageApi(imageFile);
         updatedImageUrl = uploadRes.publicUrl;
@@ -84,7 +84,6 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
         price: price ? parseFloat(price) : null,
       };
 
-      // Call PATCH /rest/v1/products?id=eq.{id} API
       const updatedProduct = await updateProductApi(product.id, updatedFields);
       onProductUpdated(updatedProduct);
       onClose();
@@ -97,46 +96,61 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
-        
-        <button
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/60 backdrop-blur-md overflow-y-auto">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 25 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 25 }}
+        transition={{ type: "spring", damping: 25, stiffness: 350 }}
+        className="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 overflow-hidden"
+      >
+        <div className="specular-glare opacity-30 pointer-events-none" />
+
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
           onClick={onClose}
-          className="absolute top-5 end-5 p-1.5 rounded-full bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 cursor-pointer transition-colors"
+          className="absolute top-5 end-5 p-1.5 rounded-full liquid-pill text-[#64748B] hover:text-[#0F172A] cursor-pointer transition-colors z-20"
         >
           <X className="w-5 h-5" />
-        </button>
+        </motion.button>
 
-        <h2 className="text-xl font-black text-[#0F172A] mb-4">
+        <h2 className="text-xl font-black text-[#0F172A] mb-4 relative z-10">
           {t('form.editTitle')}
         </h2>
 
         {errorMessage && (
-          <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 relative z-10"
+          >
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
-          </div>
+          </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
           {/* Image & preview */}
-          <div className="flex items-center gap-4 p-3 rounded-2xl bg-[#F8FAFC] border border-slate-200">
+          <div className="flex items-center gap-4 p-3.5 rounded-2xl liquid-pill">
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-20 h-20 object-contain rounded-xl bg-white border border-slate-200 p-1"
+              className="w-20 h-20 object-contain rounded-xl bg-white border border-slate-200 p-1 shadow-sm"
             />
             <div className="flex-1">
               <span className="text-xs font-semibold text-[#0F172A] block mb-1">
                 {t('form.replaceImageText')}
               </span>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-[#0F172A] hover:border-[#F97316] hover:text-[#F97316] text-xs font-medium cursor-pointer transition-colors"
+                className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-[#0F172A] hover:border-[#F97316] hover:text-[#F97316] text-xs font-medium cursor-pointer shadow-xs transition-colors"
               >
                 تغيير الصورة
-              </button>
+              </motion.button>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -168,7 +182,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 dir="rtl"
                 value={nameAr}
                 onChange={(e) => setNameAr(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
               />
             </div>
 
@@ -191,7 +205,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 dir="ltr"
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] font-medium focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
               />
             </div>
           </div>
@@ -205,7 +219,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3 py-2.5 rounded-xl glass-input text-xs"
               >
                 {CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>
@@ -223,7 +237,7 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 type="text"
                 value={partNumber}
                 onChange={(e) => setPartNumber(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs font-mono text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-mono"
               />
             </div>
 
@@ -236,33 +250,37 @@ export const EditProductModal = ({ product, isOpen, onClose, onProductUpdated, i
                 step="0.01"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-300 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs"
               />
             </div>
           </div>
 
           {/* Actions */}
           <div className="pt-4 flex justify-end gap-2">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2.5 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 text-xs font-semibold cursor-pointer transition-colors"
+              className="px-4 py-2.5 rounded-xl liquid-pill text-[#64748B] hover:text-[#0F172A] text-xs font-semibold cursor-pointer"
             >
               {t('form.cancelBtn')}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-orange-500/25 cursor-pointer transition-all"
+              className="px-6 py-2.5 rounded-xl liquid-button text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-orange-500/25 cursor-pointer"
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 text-white" />}
               <span>{t('form.updateBtn')}</span>
-            </button>
+            </motion.button>
           </div>
         </form>
 
-      </div>
+      </motion.div>
     </div>
   );
 };

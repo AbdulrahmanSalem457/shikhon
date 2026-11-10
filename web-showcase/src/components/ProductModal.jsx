@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { X, Check, Copy, MessageCircle, Phone, Tag, ShieldCheck } from 'lucide-react';
+import { X, Check, Copy, MessageCircle, Phone, Tag, ShieldCheck, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const ProductModal = ({ product, isOpen, onClose }) => {
@@ -28,42 +28,50 @@ export const ProductModal = ({ product, isOpen, onClose }) => {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-        {/* Backdrop blur */}
+        {/* Backdrop with Fluid Blur */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+          className="fixed inset-0 bg-[#0F172A]/60 backdrop-blur-md"
         />
 
-        {/* Modal Container (#FFFFFF with #E2E8F0 Border) */}
+        {/* Modal Container (Liquid Glass Panel with Water Glare) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 16 }}
+          initial={{ opacity: 0, scale: 0.9, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 16 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, scale: 0.9, y: 30 }}
+          transition={{ type: "spring", damping: 25, stiffness: 350 }}
           className="relative w-full max-w-3xl rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden z-10 my-8"
         >
-          {/* Close Button */}
-          <button
+          {/* Specular glare light reflection */}
+          <div className="specular-glare opacity-40 pointer-events-none" />
+
+          {/* Close Button with Fluid Physics */}
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
             onClick={onClose}
             aria-label="Close"
-            className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} z-20 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0F172A] flex items-center justify-center transition-all cursor-pointer`}
+            className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} z-20 w-9 h-9 rounded-full liquid-pill text-[#0F172A] flex items-center justify-center cursor-pointer`}
           >
             <X className="w-4 h-4" />
-          </button>
+          </motion.button>
 
           <div className="grid grid-cols-1 md:grid-cols-2">
             
             {/* Image Preview Area */}
-            <div className="relative bg-slate-50 p-8 flex items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-slate-200">
-              <img
+            <div className="relative bg-gradient-to-b from-[#F8FAFC] to-slate-100/70 p-8 flex items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-slate-200">
+              <motion.img
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4 }}
                 src={product.image_url}
                 alt={displayName}
-                className="w-full h-auto max-h-[300px] object-contain rounded-2xl filter drop-shadow-md"
+                className="w-full h-auto max-h-[290px] object-contain rounded-2xl filter drop-shadow-lg"
               />
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs bg-white/95 border border-slate-200 px-3 py-1.5 rounded-full text-[#64748B] shadow-xs">
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs liquid-pill px-3.5 py-1.5 rounded-full text-[#64748B] shadow-xs">
                 <span className="flex items-center gap-1.5 font-medium">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#F97316]" />
                   <span>100% Genuine OEM</span>
@@ -101,7 +109,7 @@ export const ProductModal = ({ product, isOpen, onClose }) => {
                 </p>
 
                 {/* Part Number Box (Metallic Slate #64748B + Orange Accent) */}
-                <div className="mt-5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div className="mt-5 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-200 flex items-center justify-between">
                   <div>
                     <span className="text-[11px] text-[#64748B] block font-medium">
                       {t('modal.partNumber')}
@@ -110,9 +118,11 @@ export const ProductModal = ({ product, isOpen, onClose }) => {
                       {partNumber}
                     </span>
                   </div>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={handleCopyPartNumber}
-                    className="p-2 rounded-xl bg-white border border-slate-200 hover:border-orange-300 text-[#0F172A] transition-all flex items-center gap-1 text-xs cursor-pointer shadow-xs"
+                    className="p-2 rounded-xl liquid-pill text-[#0F172A] flex items-center gap-1 text-xs cursor-pointer shadow-xs"
                     title={t('modal.copyPartNumber')}
                   >
                     {copied ? (
@@ -125,7 +135,7 @@ export const ProductModal = ({ product, isOpen, onClose }) => {
                         <Copy className="w-4 h-4 text-[#64748B]" />
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
 
                 {/* Price Display */}
@@ -139,33 +149,39 @@ export const ProductModal = ({ product, isOpen, onClose }) => {
                 )}
               </div>
 
-              {/* Action Buttons */}
+              {/* Action Buttons with Liquid Animations */}
               <div className="mt-8 space-y-2.5">
-                <a
+                <motion.a
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   href={`https://wa.me/201000000000?text=${whatsappMessage}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#FB923C] hover:to-[#EA580C] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 transition-all duration-200"
+                  className="w-full py-3.5 px-4 rounded-xl liquid-button text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="w-4 h-4 text-white" />
                   <span>{t('modal.orderViaWhatsapp')}</span>
-                </a>
+                </motion.a>
 
                 <div className="flex gap-2">
-                  <a
+                  <motion.a
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     href="tel:+201000000000"
                     className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0F172A] font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <Phone className="w-3.5 h-3.5 text-[#F97316]" />
                     <span>{t('modal.callStore')}</span>
-                  </a>
+                  </motion.a>
 
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={onClose}
                     className="py-2.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#64748B] hover:text-[#0F172A] text-xs font-semibold transition-colors cursor-pointer"
                   >
                     {t('modal.close')}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 

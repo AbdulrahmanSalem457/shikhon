@@ -17,8 +17,10 @@ import {
   RefreshCw, 
   Layers, 
   Package, 
-  CheckCircle2
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const DashboardView = () => {
   const { t, language, isRTL } = useLanguage();
@@ -106,59 +108,82 @@ export const DashboardView = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 relative overflow-hidden">
       
-      {/* KPI Stats Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      {/* Background Liquid Water Blobs */}
+      <div className="liquid-blob w-[450px] h-[450px] -top-20 -right-20 bg-orange-400/10 pointer-events-none" />
+      <div className="liquid-blob w-[400px] h-[400px] top-1/2 -left-32 bg-slate-300/20 pointer-events-none" />
+
+      {/* KPI Stats Bar with Liquid Glass Physics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8 relative z-10">
         
         {/* Total parts card */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <motion.div 
+          whileHover={{ y: -5, scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          className="liquid-glass-card p-5 flex items-center justify-between cursor-default"
+        >
           <div>
             <span className="text-xs text-[#64748B] block font-semibold">
               {t('dashboard.totalParts')}
             </span>
-            <span className="text-2xl font-black text-[#0F172A] mt-1 block">
+            <span className="text-3xl font-black text-[#0F172A] mt-1 block">
               {products.length}
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#F97316]">
-            <Package className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-200/80 flex items-center justify-center text-[#F97316] shadow-xs">
+            <Package className="w-6 h-6" />
           </div>
-        </div>
+        </motion.div>
 
         {/* In Stock card */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <motion.div 
+          whileHover={{ y: -5, scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          className="liquid-glass-card p-5 flex items-center justify-between cursor-default"
+        >
           <div>
             <span className="text-xs text-[#64748B] block font-semibold">
               {t('dashboard.inStock')}
             </span>
-            <span className="text-2xl font-black text-emerald-600 mt-1 block">
+            <span className="text-3xl font-black text-emerald-600 mt-1 block">
               {products.filter(p => p.in_stock !== false).length}
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-600 shadow-xs">
+            <CheckCircle2 className="w-6 h-6" />
           </div>
-        </div>
+        </motion.div>
 
         {/* Categories count card */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <motion.div 
+          whileHover={{ y: -5, scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          className="liquid-glass-card p-5 flex items-center justify-between cursor-default"
+        >
           <div>
             <span className="text-xs text-[#64748B] block font-semibold">
               {t('dashboard.categoriesCount')}
             </span>
-            <span className="text-2xl font-black text-[#0F172A] mt-1 block">
+            <span className="text-3xl font-black text-[#0F172A] mt-1 block">
               {new Set(products.map(p => p.category || 'General')).size}
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#64748B]">
-            <Layers className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#64748B] shadow-xs">
+            <Layers className="w-6 h-6" />
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Main Action Header Card */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 mb-6 border border-slate-200 shadow-sm">
+      {/* Main Action Header Card with Liquid Glass Panel */}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="liquid-glass rounded-3xl p-6 sm:p-7 mb-8 shadow-sm relative z-10"
+      >
+        <div className="specular-glare opacity-25 pointer-events-none" />
+
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Title & Sub */}
@@ -171,21 +196,23 @@ export const DashboardView = () => {
             </p>
           </div>
 
-          {/* Add Product Button (Vibrant Orange #F97316) */}
-          <button
+          {/* Add Product Button (Liquid Button with continuous fluid wave) */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setIsAddOpen(true)}
-            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:to-[#C2410C] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-orange-500/25 transition-all self-start md:self-auto cursor-pointer"
+            className="px-6 py-3 rounded-2xl liquid-button text-xs font-bold flex items-center gap-2 shadow-lg shadow-orange-500/25 self-start md:self-auto cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-white" />
             <span>{t('dashboard.addProductBtn')}</span>
-          </button>
+          </motion.button>
 
         </div>
 
         {/* Search & View Controls Bar */}
         <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
-          {/* Search Box */}
+          {/* Search Box with Fluid Glass Meniscus */}
           <div className="relative flex-1 max-w-md">
             <Search className={`w-4 h-4 text-[#64748B] absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-3' : 'left-3'}`} />
             <input
@@ -193,87 +220,113 @@ export const DashboardView = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('dashboard.searchPlaceholder')}
-              className={`w-full py-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs text-[#0F172A] focus:border-[#F97316] focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/10 transition-all ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
+              className={`w-full py-2.5 rounded-xl glass-input text-xs ${isRTL ? 'pr-9 pl-3' : 'pl-9 pr-3'}`}
             />
           </div>
 
-          {/* View Mode & Refresh */}
+          {/* View Mode & Refresh with Liquid Pills */}
           <div className="flex items-center gap-2">
             
             {/* Refresh */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
               onClick={fetchProducts}
               disabled={loading}
-              className="p-2 rounded-xl bg-[#F8FAFC] border border-slate-200 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-2.5 rounded-xl liquid-pill text-[#64748B] hover:text-[#0F172A] cursor-pointer"
               title={t('dashboard.refresh')}
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#F97316]' : ''}`} />
+            </motion.button>
 
             {/* Grid View button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-xl border transition-all cursor-pointer ${
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-[#F97316] text-white border-[#F97316] shadow-sm'
-                  : 'bg-[#F8FAFC] border-slate-200 text-[#64748B] hover:text-[#0F172A]'
+                  ? 'liquid-button shadow-sm'
+                  : 'liquid-pill text-[#64748B] hover:text-[#0F172A]'
               }`}
               title={t('dashboard.viewGrid')}
             >
               <LayoutGrid className="w-4 h-4" />
-            </button>
+            </motion.button>
 
             {/* Table View button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setViewMode('table')}
-              className={`p-2 rounded-xl border transition-all cursor-pointer ${
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
                 viewMode === 'table'
-                  ? 'bg-[#F97316] text-white border-[#F97316] shadow-sm'
-                  : 'bg-[#F8FAFC] border-slate-200 text-[#64748B] hover:text-[#0F172A]'
+                  ? 'liquid-button shadow-sm'
+                  : 'liquid-pill text-[#64748B] hover:text-[#0F172A]'
               }`}
               title={t('dashboard.viewTable')}
             >
               <ListFilter className="w-4 h-4" />
-            </button>
+            </motion.button>
 
           </div>
 
         </div>
-      </div>
+      </motion.div>
 
       {/* Product Display: Grid or Table */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm">
-          <Package className="w-10 h-10 text-[#94A3B8] mx-auto mb-3" />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center py-20 liquid-glass rounded-3xl relative z-10"
+        >
+          <Package className="w-12 h-12 text-[#94A3B8] mx-auto mb-3" />
           <h3 className="text-sm font-bold text-[#0F172A] mb-1">
             {t('table.noData')}
           </h3>
           <p className="text-xs text-[#64748B]">
             اضغط على زر "إضافة قطعة غيار جديدة" لبدء إضافة القطع.
           </p>
-        </div>
+        </motion.div>
       ) : viewMode === 'grid' ? (
-        /* GRID VIEW */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        /* GRID VIEW with Liquid Glass Cards */
+        <motion.div 
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+          }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10"
+        >
           {filteredProducts.map((product) => {
             const displayName = language === 'ar' ? product.name_ar : product.name_en;
             const subName = language === 'ar' ? product.name_en : product.name_ar;
 
             return (
-              <div
+              <motion.div
                 key={product.id}
-                className="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all flex flex-col justify-between"
+                variants={{
+                  hidden: { opacity: 0, y: 25, scale: 0.95 },
+                  visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 280, damping: 20 } }
+                }}
+                className="liquid-glass-card p-4 flex flex-col justify-between group"
               >
+                <div className="specular-glare opacity-25 pointer-events-none" />
+
                 {/* Image */}
-                <div className="w-full h-40 rounded-2xl bg-[#F8FAFC] p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-slate-100">
-                  <img
-                    src={product.image_url}
-                    alt={displayName}
-                    className="w-full h-full object-contain filter drop-shadow-sm"
-                  />
-                  <span className="absolute top-2 start-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 border border-orange-200 text-[#F97316]">
-                    {product.category || 'General'}
-                  </span>
+                <div>
+                  <div className="w-full h-44 rounded-2xl bg-gradient-to-b from-[#F8FAFC] to-slate-100/60 p-3 mb-3 flex items-center justify-center relative overflow-hidden border border-slate-100">
+                    <img
+                      src={product.image_url}
+                      alt={displayName}
+                      className="w-full h-full object-contain filter drop-shadow-sm transform transition-transform duration-500 group-hover:scale-108"
+                    />
+                    <span className="absolute top-2 start-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/95 backdrop-blur-md border border-slate-200 text-[#F97316]">
+                      {product.category || 'General'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Details */}
@@ -281,10 +334,10 @@ export const DashboardView = () => {
                   <span className="text-[10px] font-mono font-bold text-[#64748B] block mb-1">
                     {product.part_number || product.id?.slice(0, 8)}
                   </span>
-                  <h3 className="text-sm font-bold text-[#0F172A] line-clamp-2 leading-snug">
+                  <h3 className="text-sm font-bold text-[#0F172A] line-clamp-2 leading-snug group-hover:text-[#F97316] transition-colors">
                     {displayName}
                   </h3>
-                  <p className="text-xs text-[#64748B] line-clamp-1 mt-0.5">
+                  <p className="text-xs text-[#64748B] line-clamp-1 mt-0.5 font-medium">
                     {subName}
                   </p>
                   {product.price && (
@@ -294,32 +347,40 @@ export const DashboardView = () => {
                   )}
                 </div>
 
-                {/* Actions */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                  <button
+                {/* Actions with Liquid Pills */}
+                <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => setEditingProduct(product)}
-                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-[#F8FAFC] hover:bg-orange-50 border border-slate-200 hover:border-orange-200 text-[#0F172A] hover:text-[#F97316] text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    className="flex-1 py-1.5 px-3 rounded-xl bg-slate-50 hover:bg-orange-50/60 border border-slate-200 hover:border-orange-200 text-[#0F172A] hover:text-[#F97316] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
+                    <Edit3 className="w-3.5 h-3.5 text-[#F97316]" />
                     <span>{t('table.edit')}</span>
-                  </button>
+                  </motion.button>
 
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: -6 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setDeletingProduct(product)}
-                    className="p-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
+                    className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
                     title={t('table.delete')}
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </motion.button>
                 </div>
 
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       ) : (
-        /* TABLE VIEW */
-        <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
+        /* TABLE VIEW with Liquid Glass Container */
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="liquid-glass rounded-3xl overflow-hidden shadow-sm relative z-10"
+        >
           <div className="overflow-x-auto">
             <table className="w-full text-start text-xs">
               <thead className="bg-[#F8FAFC] border-b border-slate-200 text-[#64748B] uppercase tracking-wider text-[11px]">
@@ -335,12 +396,12 @@ export const DashboardView = () => {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={product.id} className="hover:bg-orange-50/20 transition-colors group">
                     <td className="p-4">
                       <img
                         src={product.image_url}
                         alt=""
-                        className="w-12 h-12 object-contain rounded-xl bg-[#F8FAFC] p-1 border border-slate-200"
+                        className="w-12 h-12 object-contain rounded-xl bg-[#F8FAFC] p-1 border border-slate-200 group-hover:scale-110 transition-transform"
                       />
                     </td>
                     <td className="p-4 font-bold text-[#0F172A] max-w-xs truncate" dir="rtl">
@@ -362,20 +423,24 @@ export const DashboardView = () => {
                     </td>
                     <td className="p-4 text-end">
                       <div className="inline-flex items-center gap-1.5">
-                        <button
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => setEditingProduct(product)}
                           className="p-1.5 rounded-lg bg-[#F8FAFC] hover:bg-orange-50 border border-slate-200 hover:border-orange-200 text-[#0F172A] hover:text-[#F97316] transition-colors cursor-pointer"
                           title={t('table.edit')}
                         >
                           <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1, rotate: -6 }}
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => setDeletingProduct(product)}
                           className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
                           title={t('table.delete')}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        </motion.button>
                       </div>
                     </td>
                   </tr>
@@ -383,7 +448,7 @@ export const DashboardView = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Add Product Modal */}

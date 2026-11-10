@@ -3,26 +3,35 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { BrandLogo } from './BrandLogo';
 import { Globe, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const AdminNavbar = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const { user, logout, isDemoUser } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 px-4 sm:px-6 py-3 bg-[#0F172A] border-b border-slate-800 text-white shadow-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <header className="sticky top-0 z-40 px-4 sm:px-6 py-3 bg-[#0F172A]/95 backdrop-blur-2xl border-b border-slate-800 text-white shadow-md relative overflow-hidden">
+      {/* Specular glare */}
+      <div className="specular-glare opacity-25 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto flex items-center justify-between relative z-10">
         
-        {/* Brand Info with BrandLogo */}
+        {/* Brand Info with BrandLogo & Water Bobbing */}
         <div className="flex items-center gap-3">
-          <div className="h-10 flex items-center justify-center">
-            <BrandLogo className="h-9 w-auto max-w-[150px]" />
-          </div>
+          <motion.div 
+            animate={{ y: [0, -2, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="h-10 flex items-center justify-center"
+          >
+            <BrandLogo className="h-9 w-auto max-w-[150px] filter drop-shadow-[0_2px_8px_rgba(249,115,22,0.3)]" />
+          </motion.div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-lg font-black text-white">
                 {t('brand.name')}
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/15 text-[#F97316] border border-orange-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/15 text-[#F97316] border border-orange-500/30 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F97316] animate-ping" />
                 {t('brand.adminTitle')}
               </span>
               {isDemoUser && (
@@ -40,23 +49,25 @@ export const AdminNavbar = () => {
         {/* Right Controls */}
         <div className="flex items-center gap-2.5">
 
-          {/* Language Switcher Pill */}
-          <button
+          {/* Language Switcher Pill with Fluid Bounce */}
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
             onClick={toggleLanguage}
-            className="flex items-center p-1 rounded-full bg-slate-800/90 border border-slate-700 cursor-pointer hover:border-orange-500/50 transition-all text-xs font-bold"
+            className="flex items-center p-1 rounded-full bg-slate-800/90 border border-slate-700/80 cursor-pointer hover:border-orange-500/50 transition-all text-xs font-bold shadow-inner"
           >
             <span className={`px-2.5 py-0.5 rounded-full transition-all ${
-              language === 'ar' ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              language === 'ar' ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-md shadow-orange-500/30' : 'text-slate-400 hover:text-white'
             }`}>
               عربي
             </span>
             <span className={`px-2.5 py-0.5 rounded-full transition-all ${
-              language === 'en' ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              language === 'en' ? 'bg-gradient-to-r from-[#F97316] to-[#EA580C] text-white shadow-md shadow-orange-500/30' : 'text-slate-400 hover:text-white'
             }`}>
               EN
             </span>
             <Globe className="w-3.5 h-3.5 mx-1.5 text-slate-400" />
-          </button>
+          </motion.button>
 
           {/* User info & Sign out */}
           {user && (
@@ -64,14 +75,16 @@ export const AdminNavbar = () => {
               <span className="text-xs text-slate-300 font-medium hidden md:block max-w-[160px] truncate">
                 {user.email}
               </span>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={logout}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 text-xs font-semibold transition-colors cursor-pointer"
                 title={t('auth.logout')}
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">{t('auth.logout')}</span>
-              </button>
+              </motion.button>
             </div>
           )}
 
