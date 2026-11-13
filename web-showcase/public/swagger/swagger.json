@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Shikhon (شيخون) Auto Spare Parts API",
+    "title": "Shikhon Auto Spare Parts API",
     "description": "Comprehensive REST API documentation for the Shikhon automotive spare parts platform. Includes PostgREST product endpoints, Supabase Storage for direct image management, and Supabase Auth for admin authentication.",
     "version": "v1.1",
     "contact": {
@@ -213,7 +213,7 @@
                 "$ref": "#/components/schemas/CreateProductRequest"
               },
               "example": {
-                "name_ar": "سير دينامو أصلي",
+                "name_ar": "OEM Alternator Belt",
                 "name_en": "Genuine Alternator Belt",
                 "image_url": "https://ugmtruurtlyieptuzhar.supabase.co/storage/v1/object/public/product-images/belt.jpg",
                 "category": "Engine",
@@ -281,7 +281,7 @@
                 "$ref": "#/components/schemas/UpdateProductRequest"
               },
               "example": {
-                "name_ar": "سير دينامو أصلي - نسخة معدلة",
+                "name_ar": "OEM Alternator Belt - Updated",
                 "price": 38.5
               }
             }
@@ -467,7 +467,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "قم بلصق الـ access_token الذي حصلت عليه بعد استدعاء تسجيل الدخول (/auth/v1/token). سيتم إرساله تلقائياً في ترويسة الطلب كـ Authorization: Bearer <token>"
+        "description": "Enter your JWT access token obtained from /auth/v1/token. Sent automatically in the Authorization header as Bearer <token>."
       }
     },
     "schemas": {
