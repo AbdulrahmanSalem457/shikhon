@@ -5,13 +5,26 @@
 
 import { DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY } from './productsApi';
 
+function getAuthToken() {
+  try {
+    const sessionStr = localStorage.getItem('shikhon_admin_session');
+    if (sessionStr) {
+      const parsed = JSON.parse(sessionStr);
+      if (parsed?.access_token) return parsed.access_token;
+    }
+  } catch (e) {}
+  return null;
+}
+
 function getStorageConfig() {
   const url = localStorage.getItem('VITE_SUPABASE_URL') || DEFAULT_SUPABASE_URL;
   const key = localStorage.getItem('VITE_SUPABASE_ANON_KEY') || DEFAULT_SUPABASE_KEY;
+  const token = getAuthToken() || key;
   return {
     rawUrl: url.replace(/\/+$/, ''),
     storageBase: `${url.replace(/\/+$/, '')}/storage/v1`,
     key,
+    token,
   };
 }
 
@@ -49,7 +62,7 @@ export async function uploadImageApi(file) {
     throw new Error('No file provided for upload.');
   }
 
-  const { storageBase, key } = getStorageConfig();
+  const { storageBase, key, token } = getStorageConfig();
 
   const fileExt = (file.name || 'image.jpg').split('.').pop().toLowerCase();
   const cleanFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
@@ -67,7 +80,7 @@ export async function uploadImageApi(file) {
     method: 'POST',
     headers: {
       'apikey': key,
-      'Authorization': `Bearer ${key}`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': mimeType,
       'x-upsert': 'true',
     },
@@ -94,7 +107,7 @@ export async function deleteImageApi(imageUrl) {
 
   try {
     const normalized = normalizeImageUrl(imageUrl);
-    const { storageBase, key } = getStorageConfig();
+    const { storageBase, key, token } = getStorageConfig();
     const marker = '/product-images/';
     if (!normalized.includes(marker)) return;
 
@@ -107,7 +120,7 @@ export async function deleteImageApi(imageUrl) {
       method: 'DELETE',
       headers: {
         'apikey': key,
-        'Authorization': `Bearer ${key}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
   } catch (err) {
