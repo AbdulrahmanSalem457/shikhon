@@ -60,6 +60,16 @@
             req.url = req.url.replace(/%7Bid%7D|\{id\}/g, '');
           }
 
+          // Automatically transform single-image storage DELETE into Supabase Storage batch prefixes format
+          if ((req.method === 'DELETE' || req.method === 'delete') && req.url.includes('/storage/v1/object/product-images/')) {
+            const fileName = req.url.split('/storage/v1/object/product-images/')[1];
+            if (fileName) {
+              req.url = req.url.split('/product-images/')[0] + '/product-images';
+              req.body = JSON.stringify({ prefixes: [decodeURIComponent(fileName)] });
+              req.headers['Content-Type'] = 'application/json';
+            }
+          }
+
           // Allow public authentication endpoints (login and signup) to execute freely
           const url = req.url.toLowerCase();
           const isAuthOpenEndpoint = url.includes('/auth/v1/token') || url.includes('/auth/v1/signup');

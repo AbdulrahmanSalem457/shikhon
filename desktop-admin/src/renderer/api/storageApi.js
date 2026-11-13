@@ -114,14 +114,17 @@ export async function deleteImageApi(imageUrl) {
     const fileName = normalized.split(marker)[1];
     if (!fileName) return;
 
-    const deleteEndpoint = `${storageBase}/object/product-images/${fileName}`;
+    // Use official Supabase Storage batch delete endpoint which returns 200 OK
+    const deleteEndpoint = `${storageBase}/object/product-images`;
 
     await fetch(deleteEndpoint, {
       method: 'DELETE',
       headers: {
         'apikey': key,
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ prefixes: [fileName] }),
     });
   } catch (err) {
     console.warn('[Storage API] Could not delete image:', err);
