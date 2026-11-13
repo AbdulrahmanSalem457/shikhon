@@ -54,6 +54,12 @@
           // Inject Supabase routing project apikey header
           req.headers['apikey'] = DEFAULT_API_KEY;
 
+          // Automatically ensure PostgREST 'eq.' operator is attached to 'id' query parameter
+          if (req.url.includes("id=")) {
+            req.url = req.url.replace(/([?&]id=)(?!eq\.)/, '$1eq.');
+            req.url = req.url.replace(/%7Bid%7D|\{id\}/g, '');
+          }
+
           // Allow public authentication endpoints (login and signup) to execute freely
           const url = req.url.toLowerCase();
           const isAuthOpenEndpoint = url.includes('/auth/v1/token') || url.includes('/auth/v1/signup');

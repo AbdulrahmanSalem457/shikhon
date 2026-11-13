@@ -242,9 +242,7 @@
             "description": "Unauthorized"
           }
         }
-      }
-    },
-    "/rest/v1/products?id=eq.{id}": {
+      },
       "patch": {
         "tags": [
           "Products (Catalog & Admin)"
@@ -259,13 +257,14 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
             },
-            "example": "59bfb783-b682-40f7-a586-7b21310eb2bc"
+            "example": "8b9f7cc7-bfdc-442f-94b3-527db8bc6eb4",
+            "description": "Product UUID (e.g. 8b9f7cc7-bfdc-442f-94b3-527db8bc6eb4)"
           },
           {
             "name": "Prefer",
@@ -313,13 +312,14 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
             },
-            "example": "59bfb783-b682-40f7-a586-7b21310eb2bc"
+            "example": "8b9f7cc7-bfdc-442f-94b3-527db8bc6eb4",
+            "description": "Product UUID (e.g. 8b9f7cc7-bfdc-442f-94b3-527db8bc6eb4)"
           }
         ],
         "responses": {
