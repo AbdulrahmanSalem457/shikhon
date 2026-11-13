@@ -179,6 +179,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid Bearer access token"
           }
         }
       },
@@ -395,9 +398,26 @@
                 "example": {
                   "Key": "product-images/brake-disc.jpg",
                   "Id": "2cfdbf1f-81c0-4eea-8f29-19cc4d9f213a"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Key": {
+                      "type": "string",
+                      "example": "product-images/brake-disc.jpg"
+                    },
+                    "Id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "2cfdbf1f-81c0-4eea-8f29-19cc4d9f213a"
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid Bearer access token"
           }
         }
       },
@@ -426,6 +446,9 @@
         "responses": {
           "200": {
             "description": "Image deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid Bearer access token"
           }
         }
       }
@@ -451,6 +474,9 @@
         "responses": {
           "200": {
             "description": "Image binary returned"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid Bearer access token"
           }
         },
         "security": [

@@ -46,7 +46,7 @@
         tryItOutEnabled: true,
         persistAuthorization: true,
         requestInterceptor: (req) => {
-          // Allow fetching local swagger definition and assets without interception
+          // Allow fetching local swagger definition and static assets without interception
           if (!req.url || req.url.includes("swagger.json") || !req.url.startsWith("http")) {
             return req;
           }
@@ -62,16 +62,18 @@
             return req;
           }
 
-          // For all protected endpoints, require a valid user JWT Bearer token
+          // For protected endpoints, check if user provided a valid Bearer JWT access token
           const authHeader = req.headers['Authorization'] || req.headers['authorization'];
           const hasValidBearer = authHeader &&
                                  typeof authHeader === 'string' &&
                                  authHeader.startsWith('Bearer ') &&
                                  authHeader.length > 40 &&
+                                 !authHeader.includes('missing_access_token') &&
                                  !authHeader.includes(DEFAULT_API_KEY);
 
+          // If no valid user token is present, ensure request is rejected with 401 Unauthorized by the backend
           if (!hasValidBearer) {
-            throw new Error("Unauthorized: Bearer access token is required. Please obtain your token from POST /auth/v1/token and click Authorize.");
+            req.headers['Authorization'] = 'Bearer missing_access_token_please_authorize_first';
           }
 
           return req;
