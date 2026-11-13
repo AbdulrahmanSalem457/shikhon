@@ -49,11 +49,11 @@ At the top header bar of Swagger UI:
 
 ---
 
-### 3. Authorize in Swagger UI
-1. Click the green **"Authorize"** button at the top-right of the Swagger page.
-2. Under **ApiKeyAuth**: enter your Supabase `apikey` (Anon Key).
-3. Under **BearerAuth**: enter `Bearer <your_access_token>`.
-4. Click **Authorize** and then **Close**.
+### 3. Authorize in Swagger UI (Required for All Protected Endpoints)
+1. Click the green **"Authorize 🔓"** button at the top-right of the Swagger page.
+2. In the **BearerAuth** dialog, paste your `access_token` (JWT obtained from `/auth/v1/token`).
+3. Click **Authorize** and then **Close**.
+4. The padlock will show closed 🔒 and all protected APIs are now unlocked and ready for execution.
 
 ---
 

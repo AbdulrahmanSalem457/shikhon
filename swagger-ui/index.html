@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>Shikhon (شيخون) Auto Spare Parts API - Swagger UI</title>
@@ -17,40 +17,103 @@
     }
     body {
       margin: 0;
+      background: #0b1120;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", Helvetica, Arial, sans-serif;
+    }
+    .swagger-ui {
       background: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      direction: ltr;
     }
     .topbar {
       background-color: #0f172a !important;
-      border-bottom: 2px solid #0284c7;
+      border-bottom: 2px solid #ea580c;
     }
     .auth-banner {
-      background: linear-gradient(90deg, #0284c7, #0ea5e9);
-      color: #ffffff;
-      padding: 10px 20px;
+      background: #0f172a;
+      border-bottom: 2px solid #f97316;
+      color: #f8fafc;
+      padding: 12px 24px;
       font-size: 13px;
-      font-weight: 600;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      gap: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      direction: rtl;
+    }
+    .auth-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .badge-locked {
+      background: #ef4444;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .auth-banner-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #cbd5e1;
+      flex-wrap: wrap;
+    }
+    .step-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .step-num {
+      background: #f97316;
+      color: #fff;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .step-arrow {
+      color: #64748b;
+      font-weight: bold;
     }
     .auth-banner code {
-      background: rgba(0,0,0,0.25);
-      padding: 3px 8px;
-      border-radius: 6px;
+      background: rgba(255,255,255,0.12);
+      padding: 2px 7px;
+      border-radius: 4px;
       font-family: monospace;
+      color: #38bdf8;
       font-size: 11px;
+      direction: ltr;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
   <div class="auth-banner">
-    <div>
-      <span>⚡ تم تفعيل مفتاح الربط تلقائياً (Auto-Authenticated): </span>
-      <code>sb_publishable_xSR0yiIJFDYy47qtibxLNA_EQlfuLdv</code>
+    <div class="auth-banner-left">
+      <span class="badge-locked">🔒 مغلق ومحمي</span>
+      <span>لا يمكن تجربة أي API حتى تسجّل الدخول وتفعّل رمز الوصول <code>access_token</code> عبر زر <b>Authorize 🔓</b></span>
     </div>
-    <span style="font-size: 11px; opacity: 0.9;">Ready for instant testing (Try it out)</span>
+    <div class="auth-banner-steps">
+      <span class="step-item"><span class="step-num">1</span> استدعِ الدخول من <code>/auth/v1/token</code></span>
+      <span class="step-arrow">◀</span>
+      <span class="step-item"><span class="step-num">2</span> انسخ <code>access_token</code></span>
+      <span class="step-arrow">◀</span>
+      <span class="step-item"><span class="step-num">3</span> اضغط <b>Authorize 🔓</b> بالأعلى والصق الرمز</span>
+    </div>
   </div>
 
   <div id="swagger-ui"></div>
@@ -75,26 +138,43 @@
         layout: "StandaloneLayout",
         filter: true,
         tryItOutEnabled: true,
+        persistAuthorization: true,
         requestInterceptor: (req) => {
-          // Automatically inject Supabase apikey into EVERY outgoing request
-          const keyToUse = req.headers['apikey'] || localStorage.getItem('supabase_anon_key') || DEFAULT_API_KEY;
-          req.headers['apikey'] = keyToUse;
-          
-          if (!req.headers['Authorization']) {
-            req.headers['Authorization'] = 'Bearer ' + keyToUse;
+          // Always ensure Supabase project apikey header is present for internal backend routing
+          req.headers['apikey'] = DEFAULT_API_KEY;
+
+          // Check if this request is targeting the public login or registration endpoints
+          const url = (req.url || '').toLowerCase();
+          const isPublicAuth = url.includes('/auth/v1/token') || url.includes('/auth/v1/signup');
+
+          // Login and signup endpoints are allowed so the user can obtain an access_token
+          if (isPublicAuth) {
+            return req;
           }
+
+          // For all other protected endpoints, verify a real user JWT Bearer token is provided
+          const authHeader = req.headers['Authorization'] || req.headers['authorization'];
+          const hasValidBearer = authHeader &&
+                                 typeof authHeader === 'string' &&
+                                 authHeader.startsWith('Bearer ') &&
+                                 authHeader.length > 40 &&
+                                 !authHeader.includes(DEFAULT_API_KEY);
+
+          if (!hasValidBearer) {
+            const warningMsg = "⛔ طلب محظور - يلزم رمز الوصول (Access Token Required)!\n\n" +
+              "لا يمكن تجربة هذه الواجهة البرمجية قبل تسجيل الدخول وتفعيل رمز الوصول:\n\n" +
+              "1. توجّه لقسم Authentication واستدعِ /auth/v1/token ببيانات المشرف.\n" +
+              "2. انسخ قيمة الـ access_token من نتيجة الرد.\n" +
+              "3. اضغط على الزر الأخضر (Authorize 🔓) أعلى يمين الصفحة والصق التوكن واضغط Authorize.\n\n" +
+              "بعدها ستفتح جميع الواجهات البرمجية وتعمل معك بنجاح.";
+
+            alert(warningMsg);
+            throw new Error("Execution blocked: A valid Bearer access_token is required. Please authorize via Swagger UI first.");
+          }
+
           return req;
         }
       });
-
-      // Pre-authorize ApiKeyAuth so Swagger UI displays authorized by default
-      setTimeout(() => {
-        try {
-          ui.preauthorizeApiKey("ApiKeyAuth", DEFAULT_API_KEY);
-        } catch (e) {
-          console.warn('Preauthorize:', e);
-        }
-      }, 500);
 
       window.ui = ui;
     };

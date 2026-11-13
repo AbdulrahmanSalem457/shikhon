@@ -24,20 +24,18 @@
   ],
   "security": [
     {
-      "ApiKeyAuth": []
+      "BearerAuth": []
     }
   ],
   "paths": {
     "/auth/v1/token?grant_type=password": {
       "post": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "1. Log in admin (obtain JWT access token)",
         "operationId": "auth_login_post",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -71,14 +69,12 @@
     },
     "/auth/v1/signup": {
       "post": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "2. Register new admin account (Sign up)",
         "operationId": "auth_signup_post",
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -105,12 +101,13 @@
     },
     "/auth/v1/user": {
       "get": {
-        "tags": ["Authentication"],
+        "tags": [
+          "Authentication"
+        ],
         "summary": "3. Get current admin user profile",
         "operationId": "auth_user_read",
         "security": [
           {
-            "ApiKeyAuth": [],
             "BearerAuth": []
           }
         ],
@@ -126,10 +123,17 @@
     },
     "/rest/v1/products": {
       "get": {
-        "tags": ["Products (Catalog & Admin)"],
+        "tags": [
+          "Products (Catalog & Admin)"
+        ],
         "summary": "4. Fetch all car spare parts (Public & Dashboard)",
         "description": "Retrieves spare parts catalog ordered by creation date. Used by the Web Showcase and Desktop Dashboard.",
         "operationId": "products_list",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "select",
@@ -179,13 +183,15 @@
         }
       },
       "post": {
-        "tags": ["Products (Catalog & Admin)"],
+        "tags": [
+          "Products (Catalog & Admin)"
+        ],
         "summary": "5. Create new spare part (POST)",
         "description": "Inserts a new spare part record into the products table.",
         "operationId": "products_create",
         "security": [
           {
-            "ApiKeyAuth": []
+            "BearerAuth": []
           }
         ],
         "parameters": [
@@ -237,12 +243,14 @@
     },
     "/rest/v1/products?id=eq.{id}": {
       "patch": {
-        "tags": ["Products (Catalog & Admin)"],
+        "tags": [
+          "Products (Catalog & Admin)"
+        ],
         "summary": "6. Update spare part details by ID (PATCH)",
         "operationId": "products_partial_update",
         "security": [
           {
-            "ApiKeyAuth": []
+            "BearerAuth": []
           }
         ],
         "parameters": [
@@ -289,12 +297,14 @@
         }
       },
       "delete": {
-        "tags": ["Products (Catalog & Admin)"],
+        "tags": [
+          "Products (Catalog & Admin)"
+        ],
         "summary": "7. Delete spare part by ID (DELETE)",
         "operationId": "products_delete",
         "security": [
           {
-            "ApiKeyAuth": []
+            "BearerAuth": []
           }
         ],
         "parameters": [
@@ -324,13 +334,15 @@
     },
     "/storage/v1/object/product-images/{filename}": {
       "post": {
-        "tags": ["Storage (Image Management)"],
+        "tags": [
+          "Storage (Image Management)"
+        ],
         "summary": "8. Upload spare part image (POST binary)",
         "description": "Direct upload to the public bucket 'product-images'. Header x-upsert: true overwrites existing file.",
         "operationId": "storage_upload_image",
         "security": [
           {
-            "ApiKeyAuth": []
+            "BearerAuth": []
           }
         ],
         "parameters": [
@@ -390,12 +402,14 @@
         }
       },
       "delete": {
-        "tags": ["Storage (Image Management)"],
+        "tags": [
+          "Storage (Image Management)"
+        ],
         "summary": "9. Delete spare part image from storage (DELETE)",
         "operationId": "storage_delete_image",
         "security": [
           {
-            "ApiKeyAuth": []
+            "BearerAuth": []
           }
         ],
         "parameters": [
@@ -418,7 +432,9 @@
     },
     "/storage/v1/object/public/product-images/{filename}": {
       "get": {
-        "tags": ["Storage (Image Management)"],
+        "tags": [
+          "Storage (Image Management)"
+        ],
         "summary": "10. View / Download public image CDN URL (GET)",
         "operationId": "storage_get_public_image",
         "parameters": [
@@ -436,29 +452,31 @@
           "200": {
             "description": "Image binary returned"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
     "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "apikey",
-        "description": "Supabase Public Anon Key"
-      },
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Supabase User JWT Access Token"
+        "description": "قم بلصق الـ access_token الذي حصلت عليه بعد استدعاء تسجيل الدخول (/auth/v1/token). سيتم إرساله تلقائياً في ترويسة الطلب كـ Authorization: Bearer <token>"
       }
     },
     "schemas": {
       "AuthLoginRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -475,50 +493,121 @@
       "AuthLoginResponse": {
         "type": "object",
         "properties": {
-          "access_token": { "type": "string" },
-          "token_type": { "type": "string", "example": "bearer" },
-          "expires_in": { "type": "integer", "example": 3600 },
-          "user": { "type": "object" }
+          "access_token": {
+            "type": "string"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "bearer"
+          },
+          "expires_in": {
+            "type": "integer",
+            "example": 3600
+          },
+          "user": {
+            "type": "object"
+          }
         }
       },
       "Product": {
         "type": "object",
-        "required": ["id", "name_ar", "name_en", "image_url", "created_at"],
+        "required": [
+          "id",
+          "name_ar",
+          "name_en",
+          "image_url",
+          "created_at"
+        ],
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "name_ar": { "type": "string" },
-          "name_en": { "type": "string" },
-          "image_url": { "type": "string", "format": "uri" },
-          "category": { "type": "string" },
-          "part_number": { "type": "string" },
-          "price": { "type": "number" },
-          "in_stock": { "type": "boolean" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name_ar": {
+            "type": "string"
+          },
+          "name_en": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "category": {
+            "type": "string"
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "in_stock": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "CreateProductRequest": {
         "type": "object",
-        "required": ["name_ar", "name_en", "image_url"],
+        "required": [
+          "name_ar",
+          "name_en",
+          "image_url"
+        ],
         "properties": {
-          "name_ar": { "type": "string" },
-          "name_en": { "type": "string" },
-          "image_url": { "type": "string", "format": "uri" },
-          "category": { "type": "string" },
-          "part_number": { "type": "string" },
-          "price": { "type": "number" },
-          "in_stock": { "type": "boolean" }
+          "name_ar": {
+            "type": "string"
+          },
+          "name_en": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "category": {
+            "type": "string"
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "in_stock": {
+            "type": "boolean"
+          }
         }
       },
       "UpdateProductRequest": {
         "type": "object",
         "properties": {
-          "name_ar": { "type": "string" },
-          "name_en": { "type": "string" },
-          "image_url": { "type": "string", "format": "uri" },
-          "category": { "type": "string" },
-          "part_number": { "type": "string" },
-          "price": { "type": "number" },
-          "in_stock": { "type": "boolean" }
+          "name_ar": {
+            "type": "string"
+          },
+          "name_en": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "category": {
+            "type": "string"
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "in_stock": {
+            "type": "boolean"
+          }
         }
       }
     }
