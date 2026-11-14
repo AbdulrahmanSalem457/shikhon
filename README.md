@@ -2,7 +2,9 @@
 
 <div align="center">
 
-![Shikhon Logo](web-showcase/public/logo.svg)
+  <img src="assets/shikhon-logo.png" alt="Shikhon Logo" width="380" />
+
+  <br/>
 
 ### **منصة شيخون الرقمية لقطع غيار السيارات الأصلية**
 **Next-Generation Bilingual (Arabic & English) Auto Spare Parts Showcase & Management Ecosystem**
